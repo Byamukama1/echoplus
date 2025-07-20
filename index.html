@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoplus - Smart Investment Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --light: #ffffff;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --text: #212529;
+            --text-light: #6c757d;
+        }
+        
+        body {
+            background-color: var(--light-gray);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            padding: 15px 0;
+            background-color: var(--light);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before,
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid white;
+            opacity: 0.7;
+        }
+        
+        .logo-icon::before {
+            width: 28px;
+            height: 28px;
+        }
+        
+        .logo-icon::after {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .logo-icon i {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .action-btn {
+            background: var(--light);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 0.8rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Metrics Section */
+        .metrics-section {
+            padding: 20px 0;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .metric-trend {
+            font-size: 0.7rem;
+            color: var(--success);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        /* Products Section */
+        .products-section {
+            margin-top: 10px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .product-card {
+            background-color: var(--light);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--medium-gray);
+            transition: all 0.2s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .product-image {
+            height: 130px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .product-image img {
+            max-width: 80%;
+            max-height: 80%;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
+            border-radius: 4px;
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .product-content {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .product-price {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 2px;
+        }
+        
+        .detail-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .buy-button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .buy-button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+        
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--light);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid var(--medium-gray);
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item i {
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metric-value {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* Status bar simulation */
+        .status-bar {
+            background-color: var(--light);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text);
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .status-left, .status-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .status-center {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .earnings-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eaeaea;
+        }
+        
+        .summary-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .summary-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .summary-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">9:41</div>
+        <div class="status-center">Echoplus</div>
+        <div class="status-right">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <span>Echoplus</span>
+                </div>
+                
+                <div class="user-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Deposit</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-user"></i>
+                        <span>Account</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Earnings Summary -->
+        <div class="earnings-summary">
+            <div class="summary-title">
+                <i class="fas fa-chart-line"></i>
+                <span>Today's Summary</span>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-value">UGX 2,850</div>
+                    <div class="summary-label">Today's Earnings</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value">UGX 42,600</div>
+                    <div class="summary-label">Pending Withdrawal</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Metrics Section -->
+        <section class="metrics-section">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-wallet"></i>
+                        <span>Total Deposit</span>
+                    </div>
+                    <div class="metric-value">UGX 780,500</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+24% this month</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-coins"></i>
+                        <span>Total Earnings</span>
+                    </div>
+                    <div class="metric-value">UGX 56,300</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+18% this month</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Total Withdrawn</span>
+                    </div>
+                    <div class="metric-value">UGX 32,000</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12% this month</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-sun"></i>
+                        <span>Active Investments</span>
+                    </div>
+                    <div class="metric-value">8</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+2 this week</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Products Section -->
+        <section class="products-section">
+            <h2 class="section-title">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Smartphone Investments</span>
+            </h2>
+            
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Budget Smartphone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Budget Smartphone</h3>
+                        <div class="product-price">UGX 10,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 250</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 20,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Entry Smartphone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Entry Smartphone</h3>
+                        <div class="product-price">UGX 30,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 750</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 60,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+
+    <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Basic Smartphone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Basic Smartphone</h3>
+                        <div class="product-price">UGX 50,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 1,250</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 100,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="product-badge">POPULAR</div>
+                        <img src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Mid-range Phone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Mid-range Phone</h3>
+                        <div class="product-price">UGX 100,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 2,500</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 200,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 5 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Advanced Phone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Advanced Phone</h3>
+                        <div class="product-price">UGX 200,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 5,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 400,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 6 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="product-badge">HOT</div>
+                        <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Premium Phone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Premium Phone</h3>
+                        <div class="product-price">UGX 300,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 7,500</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 600,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+
+     <!-- Product 7 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Pro Phone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Pro Phone</h3>
+                        <div class="product-price">UGX 500,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 12,500</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 1,000,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 8 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1610792516307-ea5acbd9c4b7?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Business Phone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Business Phone</h3>
+                        <div class="product-price">UGX 700,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 17,500</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 1,400,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 9 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="product-badge">VIP</div>
+                        <img src="https://images.unsplash.com/photo-1600086827875-a9c8d0a51d2b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Luxury Phone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Luxury Phone</h3>
+                        <div class="product-price">UGX 900,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 22,500</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 1,800,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 10 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <div class="product-badge">PREMIUM</div>
+                        <img src="https://images.unsplash.com/photo-1606220588915-8e3f8a8136d3?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Flagship Phone">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Flagship Phone</h3>
+                        <div class="product-price">UGX 1,000,000</div>
+                        
+                        <div class="product-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Cycle</span>
+                                <span class="detail-value">80 Days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Daily Income</span>
+                                <span class="detail-value">UGX 25,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Revenue</span>
+                                <span class="detail-value">UGX 2,000,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ROI</span>
+                                <span class="detail-value">100%</span>
+                            </div>
+                        </div>
+                        
+                        <button class="buy-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>INVEST</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-chart-pie"></i>
+            <span>Portfolio</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-gift"></i>
+            <span>Rewards</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Account</span>
+        </div>
+    </nav>
+
+<script>
+        // Update metrics with dynamic values
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click animation to buy buttons
+            const buyButtons = document.querySelectorAll('.buy-button');
+            buyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const originalContent = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-check"></i> Invested!';
+                        this.style.background = 'linear-gradient(135deg, #4cc9f0, #4895ef)';
+                        this.style.opacity = '0.9';
+                        
+                        // Reset button after 3 seconds
+                        setTimeout(() => {
+                            this.innerHTML = originalContent;
+                            this.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                            this.style.opacity = '1';
+                            this.disabled = false;
+                        }, 3000);
+                    }, 1500);
+                });
+            });
+            
+            // Simulate active investments count
+            const activeInvestments = document.querySelector('.metric-value:last-child');
+            let count = 8;
+            setInterval(() => {
+                count = Math.min(10, count + Math.round(Math.random()));
+                activeInvestments.textContent = count;
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
