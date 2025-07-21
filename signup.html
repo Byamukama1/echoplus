@@ -5,78 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Echoplus</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         :root {
             --primary: #4361ee;
-            --secondary: #3f37c9;
+            --primary-dark: #3a56d4;
             --accent: #4cc9f0;
             --light: #f8f9fa;
             --dark: #212529;
+            --darker: #121212;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border: #dee2e6;
             --success: #4caf50;
             --error: #f44336;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --referral-bg: #f0f5ff;
         }
         
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: var(--light);
+            background-color: #ffffff;
+            color: var(--darker);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             padding: 20px;
+            background-image: radial-gradient(#f0f4ff 1px, transparent 1px);
+            background-size: 20px 20px;
         }
         
         .header {
             text-align: center;
             padding: 20px 0;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .logo {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 5px;
+            color: var(--primary);
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
         }
         
         .logo i {
             color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
         
         .tagline {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--gray);
             font-size: 1.1rem;
-            max-width: 600px;
             margin: 0 auto;
+            font-weight: 400;
+            line-height: 1.6;
         }
         
         .container {
             max-width: 500px;
             width: 100%;
             margin: 20px auto;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+            background: white;
+            border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .container:hover {
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.15);
+            transform: translateY(-5px);
         }
         
         .form-title {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 1.8rem;
             position: relative;
             padding-bottom: 15px;
+            font-weight: 600;
+            color: var(--darker);
         }
         
         .form-title::after {
@@ -87,12 +113,12 @@
             transform: translateX(-50%);
             width: 80px;
             height: 4px;
-            background: var(--accent);
+            background: var(--primary);
             border-radius: 2px;
         }
         
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 22px;
             position: relative;
         }
         
@@ -100,7 +126,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--darker);
         }
         
         .input-with-icon {
@@ -112,44 +138,46 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--gray);
             font-size: 18px;
         }
         
         .form-control {
             width: 100%;
             padding: 14px 14px 14px 45px;
-            border: none;
-            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            background: white;
             border-radius: 8px;
-            color: white;
+            color: var(--darker);
             font-size: 16px;
             transition: all 0.3s;
-            border: 1px solid transparent;
+            font-weight: 400;
         }
         
         .form-control:focus {
             outline: none;
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
         
         .referral-note {
-            background: rgba(67, 97, 238, 0.15);
+            background: var(--referral-bg);
             border-left: 4px solid var(--primary);
             padding: 15px;
             border-radius: 0 8px 8px 0;
-            margin: 20px 0;
-            font-size: 0.9rem;
+            margin: 25px 0;
+            font-size: 0.95rem;
             display: flex;
-            align-items: center;
-            gap: 10px;
+            align-items: flex-start;
+            gap: 12px;
+            color: var(--darker);
         }
         
         .referral-note i {
-            color: var(--accent);
-            font-size: 1.2rem;
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-top: 2px;
         }
         
         .btn {
@@ -165,24 +193,26 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
         }
         
         .btn:hover {
-            background: var(--secondary);
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
         }
         
         .login-link {
             text-align: center;
             margin-top: 25px;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--gray);
+            font-size: 15px;
         }
         
         .login-link a {
-            color: var(--accent);
+            color: var(--primary);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .login-link a:hover {
@@ -196,7 +226,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--gray);
             cursor: pointer;
             font-size: 18px;
         }
@@ -205,7 +235,7 @@
             text-align: center;
             padding: 20px;
             margin-top: auto;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--gray);
             font-size: 0.9rem;
         }
         
@@ -214,6 +244,7 @@
             font-size: 14px;
             margin-top: 5px;
             display: none;
+            font-weight: 500;
         }
         
         .success-message {
@@ -221,11 +252,62 @@
             font-size: 14px;
             margin-top: 5px;
             display: none;
+            font-weight: 500;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(76, 175, 80, 0.1);
+        }
+        
+        .password-strength {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            background: var(--light-gray);
+            border-radius: 2px;
+        }
+        
+        .strength-bar.active {
+            background: var(--success);
+        }
+        
+        .strength-bar.medium {
+            background: orange;
+        }
+        
+        .strength-text {
+            font-size: 13px;
+            margin-top: 5px;
+            color: var(--gray);
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .terms {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--gray);
+            text-align: center;
+        }
+        
+        .terms a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .terms a:hover {
+            text-decoration: underline;
         }
         
         @media (max-width: 600px) {
             .container {
-                padding: 25px;
+                padding: 25px 20px;
             }
             
             .logo {
@@ -234,6 +316,11 @@
             
             .form-title {
                 font-size: 1.5rem;
+            }
+            
+            .referral-note {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -292,11 +379,22 @@
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
+                <div class="password-strength">
+                    <div class="strength-bar" id="bar1"></div>
+                    <div class="strength-bar" id="bar2"></div>
+                    <div class="strength-bar" id="bar3"></div>
+                    <div class="strength-bar" id="bar4"></div>
+                </div>
+                <div class="strength-text" id="strength-text">Password strength: weak</div>
                 <div class="error-message" id="password-error">Password must be at least 6 characters</div>
             </div>
             
             <div class="form-group">
                 <input type="hidden" id="referrer" value="">
+            </div>
+            
+            <div class="terms">
+                By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
             </div>
             
             <button type="submit" class="btn" id="signup-btn">
@@ -348,11 +446,66 @@
         const referrerInput = document.getElementById('referrer');
         const togglePasswordBtn = document.getElementById('toggle-password');
         const signupBtn = document.getElementById('signup-btn');
+        const strengthText = document.getElementById('strength-text');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        const bar3 = document.getElementById('bar3');
+        const bar4 = document.getElementById('bar4');
         
         // Get referral ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const referralId = urlParams.get('ref') || '';
         referrerInput.value = referralId;
+        
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            // Reset bars
+            bar1.classList.remove('active', 'medium');
+            bar2.classList.remove('active', 'medium');
+            bar3.classList.remove('active', 'medium');
+            bar4.classList.remove('active', 'medium');
+            
+            if (password.length === 0) {
+                strengthText.textContent = '';
+                return;
+            }
+            
+            // Length check
+            if (password.length >= 8) strength += 1;
+            
+            // Lowercase check
+            if (/[a-z]/.test(password)) strength += 1;
+            
+            // Uppercase check
+            if (/[A-Z]/.test(password)) strength += 1;
+            
+            // Number check
+            if (/[0-9]/.test(password)) strength += 1;
+            
+            // Special character check
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            // Visual feedback
+            if (strength > 0) bar1.classList.add('active');
+            if (strength > 1) bar2.classList.add('active');
+            if (strength > 2) bar3.classList.add('active');
+            if (strength > 3) bar4.classList.add('active');
+            
+            // Text feedback
+            if (strength < 2) {
+                strengthText.textContent = 'Password strength: Weak';
+                strengthText.style.color = '#f44336';
+            } else if (strength < 4) {
+                strengthText.textContent = 'Password strength: Medium';
+                strengthText.style.color = '#FF9800';
+                bar3.classList.add('medium');
+            } else {
+                strengthText.textContent = 'Password strength: Strong';
+                strengthText.style.color = '#4CAF50';
+            }
+        }
         
         // Toggle password visibility
         togglePasswordBtn.addEventListener('click', () => {
@@ -360,6 +513,11 @@
             passwordInput.setAttribute('type', type);
             togglePasswordBtn.innerHTML = type === 'password' ? 
                 '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+        
+        // Password strength on input
+        passwordInput.addEventListener('input', () => {
+            checkPasswordStrength(passwordInput.value);
         });
         
         // Form validation
@@ -436,6 +594,9 @@
                 // Show success message
                 document.getElementById('success-message').style.display = 'block';
                 
+                // Hide form and show success
+                signupForm.style.opacity = '0.6';
+                
                 // Redirect after a delay
                 setTimeout(() => {
                     window.location.href = 'dashboard.html'; // Replace with your dashboard URL
@@ -464,6 +625,8 @@
                 const errorElement = document.createElement('div');
                 errorElement.className = 'error-message';
                 errorElement.style.display = 'block';
+                errorElement.style.textAlign = 'center';
+                errorElement.style.marginTop = '15px';
                 errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessage}`;
                 
                 signupForm.insertBefore(errorElement, signupBtn);
