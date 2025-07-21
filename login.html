@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Echoplus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4caf50;
+            --error: #f44336;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 450px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--primary);
+        }
+        
+        .tagline {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            color: var(--success);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .login-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .login-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .signup-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+            
+            .login-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            <span>Echoplus</span>
+        </div>
+        <p class="tagline">Secure access to your investment portfolio</p>
+        
+        <h2 class="form-title">Sign In</h2>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="error-message" id="email-error">Please enter a valid email address</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                    <button type="button" class="password-toggle" id="toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="error-message" id="password-error">Password must be at least 6 characters</div>
+            </div>
+            
+            <div class="login-links">
+                <a href="#" id="forgot-password">Forgot password?</a>
+                <a href="#" id="resend-verification">Resend verification</a>
+            </div>
+            
+            <button type="submit" class="btn" id="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i> Login successful! Redirecting...
+            </div>
+        </form>
+        
+        <div class="signup-link">
+            Don't have an account? <a href="signup.html">Create one</a>
+        </div>
+        
+        <div class="footer">
+            &copy; 2023 Echoplus. All rights reserved.
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+            authDomain: "echoplus-e9606.firebaseapp.com",
+            projectId: "echoplus-e9606",
+            storageBucket: "echoplus-e9606.firebasestorage.app",
+            messagingSenderId: "674979906304",
+            appId: "1:674979906304:web:7864593a26f571a268a9e5",
+            measurementId: "G-TYC9PSQFR2"
+        };
+        
+        // Initialize Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // DOM elements
+        const loginForm = document.getElementById('login-form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('toggle-password');
+        const loginBtn = document.getElementById('login-btn');
+        const forgotPasswordBtn = document.getElementById('forgot-password');
+        const resendVerificationBtn = document.getElementById('resend-verification');
+        
+        // Toggle password visibility
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePasswordBtn.innerHTML = type === 'password' ? 
+                '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+        
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            
+            // Reset errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (passwordInput.value.length < 6) {
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Login function
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+            
+            // Disable button to prevent multiple submissions
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+            
+            try {
+                // Sign in user
+                await signInWithEmailAndPassword(
+                    auth, 
+                    emailInput.value, 
+                    passwordInput.value
+                );
+                
+                // Show success message
+                document.getElementById('success-message').style.display = 'block';
+                
+                // Redirect to index.html after a delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+                
+            } catch (error) {
+                console.error("Error signing in: ", error);
+                
+                // Show error message to user
+                let errorMessage;
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'No account found with this email.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Incorrect password. Please try again.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Please enter a valid email address.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'This account has been disabled.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many login attempts. Please try again later.';
+                        break;
+                    default:
+                        errorMessage = 'An error occurred. Please try again.';
+                }
+                
+                // Show specific error message
+                const errorElement = document.createElement('div');
+                errorElement.className = 'error-message';
+                errorElement.style.display = 'block';
+                errorElement.style.textAlign = 'center';
+                errorElement.style.marginTop = '15px';
+                errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessage}`;
+                
+                loginForm.insertBefore(errorElement, loginBtn);
+                
+                // Re-enable button
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            }
+        });
+        
+        // Forgot password functionality
+        forgotPasswordBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            const email = prompt("Please enter your email address to reset your password:");
+            if (email) {
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    alert("Password reset email sent! Please check your inbox.");
+                } catch (error) {
+                    console.error("Error sending password reset email:", error);
+                    alert("Error sending password reset email. Please try again.");
+                }
+            }
+        });
+        
+        // Resend email verification
+        resendVerificationBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert("Verification email functionality would be implemented here.");
+        });
+    </script>
+</body>
+</html>
