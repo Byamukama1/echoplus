@@ -138,77 +138,80 @@
 
   <!-- Firebase SDKs -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
-      authDomain: "echoplus-e9606.firebaseapp.com",
-      projectId: "echoplus-e9606",
-      storageBucket: "echoplus-e9606.firebasestorage.app",
-      messagingSenderId: "674979906304",
-      appId: "1:674979906304:web:7864593a26f571a268a9e5",
-      measurementId: "G-TYC9PSQFR2"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+    authDomain: "echoplus-e9606.firebaseapp.com",
+    projectId: "echoplus-e9606",
+    storageBucket: "echoplus-e9606.firebasestorage.app",
+    messagingSenderId: "674979906304",
+    appId: "1:674979906304:web:7864593a26f571a268a9e5",
+    measurementId: "G-TYC9PSQFR2"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-    const depositForm = document.getElementById('depositForm');
-    const alertBox = document.getElementById('alertBox');
-    const businessPhone = document.getElementById('businessPhone').textContent; // MTN or Airtel business line
+  const depositForm = document.getElementById('depositForm');
 
-    onAuthStateChanged(auth, user => {
-      if (!user) {
-        alert("Please log in to make a deposit.");
-        window.location.href = "login.html"; // Adjust as needed
+  function showLoginPopup() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log("Logged in as:", user.email);
+        setupDepositForm(user); // continue deposit setup
+      })
+      .catch((error) => {
+        console.error("Login failed:", error);
+        alert("Login failed. Please try again.");
+      });
+  }
+
+  function setupDepositForm(user) {
+    depositForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('phone').value.trim();
+      const owner = document.getElementById('owner').value.trim();
+      const amount = parseInt(document.getElementById('amount').value.trim());
+
+      if (!phone || !owner || !amount) {
+        alert("Please fill in all fields.");
         return;
       }
 
-      depositForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+      try {
+        await addDoc(collection(db, "deposits"), {
+          userId: user.uid,
+          phone,
+          simCardOwner: owner,
+          amount,
+          currency: "UGX",
+          method: "Mobile Money",
+          status: "pending",
+          createdAt: serverTimestamp()
+        });
 
-        const phone = document.getElementById('phone').value.trim();
-        const owner = document.getElementById('owner').value.trim();
-        const amount = parseInt(document.getElementById('amount').value.trim());
-
-        if (!phone || !owner || !amount) {
-          alert("Please complete all fields.");
-          return;
-        }
-
-        try {
-          await addDoc(collection(db, "deposits"), {
-            userId: user.uid,
-            phone,
-            simCardOwner: owner,
-            amount,
-            currency: "UGX",
-            method: "Mobile Money",
-            status: "pending",
-            createdAt: serverTimestamp()
-          });
-
-          // Show next step message
-          alertBox.style.display = 'block';
-          depositForm.reset();
-        } catch (error) {
-          console.error("Error submitting deposit:", error);
-          alert("Something went wrong. Please try again.");
-        }
-      });
+        alert("Deposit submitted successfully.");
+        depositForm.reset();
+      } catch (error) {
+        console.error("Error adding deposit:", error);
+        alert("Something went wrong. Please try again.");
+      }
     });
+  }
 
-    // Copy phone number
-    window.copyPhone = function () {
-      const phone = document.getElementById("businessPhone").textContent;
-      navigator.clipboard.writeText(phone).then(() => {
-        alert("Business number copied: " + phone);
-      });
-    };
-  </script>
-
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setupDepositForm(user);
+    } else {
+      showLoginPopup();
+    }
+  });
+</script>
 </body>
 </html>
