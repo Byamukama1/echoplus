@@ -824,7 +824,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
-   <script>
+  <script>
   // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
@@ -841,12 +841,20 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  // Redirect unauthenticated users
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = 'login.html';
-    }
-  });
+  // Disable persistent login (forces login every time)
+  auth.setPersistence(firebase.auth.Auth.Persistence.NONE)
+    .then(() => {
+      // On state change, redirect unauthenticated users
+      auth.onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = 'login.html';
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Persistence error:", error);
+      window.location.href = 'login.html'; // Redirect on failure just in case
+    });
 </script>
 </body>
 </html>
