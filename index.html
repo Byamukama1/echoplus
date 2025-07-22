@@ -462,62 +462,59 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-   <main class="container">
-  <!-- Earnings Summary -->
-  <div class="earnings-summary">
-    <div class="summary-title">
-      
-    </div>
-    <div class="summary-grid">
-      <div class="summary-item">
-        <div class="summary-value">UGX 2,850</div>
-        <div class="summary-label">Today's Earnings</div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-value">UGX 42,600</div>
-        <div class="summary-label">Uninvested Deposit</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Metrics Section -->
-  <section class="metrics-section">
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-label">
-          <i class="fas fa-wallet"></i>
-          <span>Total Deposit</span>
+       <!-- Main Content -->
+    <main class="container">
+        <!-- Earnings Summary -->
+        <div class="earnings-summary">
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div id="todays-earnings" class="summary-value">0</div>
+                    <div class="summary-label">Today's Earnings</div>
+                </div>
+                <div class="summary-item">
+                    <div id="uninvested-deposit" class="summary-value">0</div>
+                    <div class="summary-label">Uninvested Deposit</div>
+                </div>
+            </div>
         </div>
-        <div class="metric-value">UGX 780,500</div>
-      </div>
 
-      <div class="metric-card">
-        <div class="metric-label">
-          <i class="fas fa-coins"></i>
-          <span>Total Earnings</span>
-        </div>
-        <div class="metric-value">UGX 56,300</div>
-      </div>
+        <!-- Metrics Section -->
+        <section class="metrics-section">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-wallet"></i>
+                        <span>Total Deposit</span>
+                    </div>
+                    <div id="total-deposit" class="metric-value">0</div>
+                </div>
 
-      <div class="metric-card">
-        <div class="metric-label">
-          <i class="fas fa-money-bill-wave"></i>
-          <span>Total Withdrawn</span>
-        </div>
-        <div class="metric-value">UGX 32,000</div>
-      </div>
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-coins"></i>
+                        <span>Total Earnings</span>
+                    </div>
+                    <div id="total-earnings" class="metric-value">0</div>
+                </div>
 
-      <div class="metric-card">
-        <div class="metric-label">
-          <i class="fas fa-sun"></i>
-          <span>Active Investments</span>
-        </div>
-        <div class="metric-value">8</div>
-      </div>
-    </div>
-  </section>
-</main>
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Total Withdrawn</span>
+                    </div>
+                    <div id="total-withdrawn" class="metric-value">0</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-sun"></i>
+                        <span>Active Investments</span>
+                    </div>
+                    <div id="active-investments" class="metric-value">0</div>
+                </div>
+            </div>
+        </section>
+    </main>
       
         <!-- Products Section -->
         <section class="products-section">
@@ -974,5 +971,201 @@
     }
   });
 </script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+            authDomain: "echoplus-e9606.firebaseapp.com",
+            projectId: "echoplus-e9606",
+            storageBucket: "echoplus-e9606.appspot.com",
+            messagingSenderId: "674979906304",
+            appId: "1:674979906304:web:7864593a26f571a268a9e5",
+            measurementId: "G-TYC9PSQFR2"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Enable persistent login
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                auth.onAuthStateChanged(user => {
+                    if (!user) {
+                        window.location.href = 'login.html';
+                    } else {
+                        updateDashboard();
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error("Persistence error:", error);
+                window.location.href = 'login.html';
+            });
+
+        // Parse currency values from text
+        function parseCurrency(text) {
+            const num = parseInt(text.replace(/[^\d]/g, ''));
+            return isNaN(num) ? 0 : num;
+        }
+
+        // Update dashboard with user data
+        async function updateDashboard() {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            try {
+                const userRef = db.collection('users').doc(user.uid);
+                const userDoc = await userRef.get();
+
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    
+                    // Update earnings summary
+                    document.getElementById('todays-earnings').textContent = 
+                        `UGX ${(userData.todaysEarnings || 0).toLocaleString()}`;
+                    
+                    document.getElementById('uninvested-deposit').textContent = 
+                        `UGX ${(userData.uninvestedDeposit || 0).toLocaleString()}`;
+                    
+                    // Update metrics
+                    document.getElementById('total-deposit').textContent = 
+                        `UGX ${(userData.totalDeposit || 0).toLocaleString()}`;
+                    
+                    document.getElementById('total-earnings').textContent = 
+                        `UGX ${(userData.totalEarnings || 0).toLocaleString()}`;
+                    
+                    document.getElementById('total-withdrawn').textContent = 
+                        `UGX ${(userData.totalWithdrawn || 0).toLocaleString()}`;
+                    
+                    document.getElementById('active-investments').textContent = 
+                        userData.activeInvestments || 0;
+                }
+            } catch (error) {
+                console.error("Dashboard update error:", error);
+            }
+        }
+
+        // Calculate total paid deposits for a user
+        async function getTotalPaidDeposits(userId) {
+            try {
+                const depositsRef = db.collection('deposits')
+                    .where('userId', '==', userId)
+                    .where('status', '==', 'paid');
+                
+                const snapshot = await depositsRef.get();
+                let total = 0;
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    total += data.amount || 0;
+                });
+                
+                return total;
+            } catch (error) {
+                console.error("Error getting deposits:", error);
+                return 0;
+            }
+        }
+
+        // Calculate total invested amount
+        async function getTotalInvested(userId) {
+            try {
+                const investmentsRef = db.collection('products')
+                    .where('userId', '==', userId);
+                
+                const snapshot = await investmentsRef.get();
+                let total = 0;
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    total += data.productPrice || 0;
+                });
+                
+                return total;
+            } catch (error) {
+                console.error("Error getting investments:", error);
+                return 0;
+            }
+        }
+
+        // Handle investment purchases
+        async function handleInvestment(event) {
+            const button = event.currentTarget;
+            button.disabled = true;
+
+            try {
+                const productCard = button.closest('.product-card');
+                const title = productCard.querySelector('.product-title').textContent;
+                const price = parseCurrency(productCard.querySelector('.product-price').textContent);
+
+                const details = productCard.querySelectorAll('.simplified-detail');
+                const dailyIncome = parseCurrency(details[0].querySelector('.simplified-value').textContent);
+                const cycle = parseCurrency(details[1].querySelector('.simplified-value').textContent);
+                const totalRevenue = parseCurrency(details[2].querySelector('.simplified-value').textContent);
+
+                const user = auth.currentUser;
+                if (!user) {
+                    alert('Please login first');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Calculate available funds
+                const totalDeposits = await getTotalPaidDeposits(user.uid);
+                const totalInvested = await getTotalInvested(user.uid);
+                const availableFunds = totalDeposits - totalInvested;
+
+                if (availableFunds < price) {
+                    alert(`Insufficient funds. You need UGX ${price.toLocaleString()} but only have UGX ${availableFunds.toLocaleString()} available.`);
+                    button.disabled = false;
+                    return;
+                }
+
+                // Create investment in 'products' collection
+                const investmentData = {
+                    userId: user.uid,
+                    productType: title,
+                    productPrice: price,
+                    dailyIncome: dailyIncome,
+                    totalCycle: cycle,
+                    currentCycle: 0,
+                    amountEarnedSoFar: 0,
+                    remainingAmount: totalRevenue,
+                    remainingDays: cycle,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'active'
+                };
+
+                await db.collection('products').add(investmentData);
+                alert('Investment successful!');
+                updateDashboard();
+
+            } catch (error) {
+                console.error("Investment error:", error);
+                alert(`Error: ${error.message}`);
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        // Attach events after DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const buyButtons = document.querySelectorAll('.buy-button');
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', handleInvestment);
+            });
+
+            if (auth.currentUser) {
+                updateDashboard();
+            }
+        });
+    </script>
 </body>
 </html>
