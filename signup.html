@@ -323,8 +323,29 @@
                 align-items: flex-start;
             }
         }
+        
+        .referral-display {
+            background: #eef7ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .referral-display i {
+            color: var(--primary);
+        }
+        
+        .referral-display span {
+            font-weight: 500;
+            color: var(--primary);
+        }
     </style>
 </head>
+
 <body>
     <div class="header">
         <div class="logo">
@@ -343,6 +364,12 @@
         </div>
         
         <form id="signup-form">
+            <!-- Referral display -->
+            <div id="referral-display" class="referral-display" style="display: none;">
+                <i class="fas fa-user-friends"></i>
+                <div>You're signing up with referral from: <span id="referral-phone"></span></div>
+            </div>
+            
             <div class="form-group">
                 <label for="username">Full Name</label>
                 <div class="input-with-icon">
@@ -374,7 +401,7 @@
                 <label for="password">Password</label>
                 <div class="input-with-icon">
                     <i class="fas fa-lock"></i>
-                    <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                    <input type="password" id="password" class="form-control" placeholder="Create a password (min 6 characters)" required>
                     <button type="button" class="password-toggle" id="toggle-password">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -387,10 +414,6 @@
                 </div>
                 <div class="strength-text" id="strength-text">Password strength: weak</div>
                 <div class="error-message" id="password-error">Password must be at least 6 characters</div>
-            </div>
-            
-            <div class="form-group">
-                <input type="hidden" id="referrer" value="">
             </div>
             
             <div class="terms">
@@ -422,7 +445,7 @@
             apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
             authDomain: "echoplus-e9606.firebaseapp.com",
             projectId: "echoplus-e9606",
-            storageBucket: "echoplus-e9606.firebasestorage.app",
+            storageBucket: "echoplus-e9606.appspot.com",
             messagingSenderId: "674979906304",
             appId: "1:674979906304:web:7864593a26f571a268a9e5",
             measurementId: "G-TYC9PSQFR2"
@@ -443,7 +466,6 @@
         const emailInput = document.getElementById('email');
         const phoneInput = document.getElementById('phone');
         const passwordInput = document.getElementById('password');
-        const referrerInput = document.getElementById('referrer');
         const togglePasswordBtn = document.getElementById('toggle-password');
         const signupBtn = document.getElementById('signup-btn');
         const strengthText = document.getElementById('strength-text');
@@ -451,11 +473,18 @@
         const bar2 = document.getElementById('bar2');
         const bar3 = document.getElementById('bar3');
         const bar4 = document.getElementById('bar4');
+        const referralDisplay = document.getElementById('referral-display');
+        const referralPhoneSpan = document.getElementById('referral-phone');
         
-        // Get referral ID from URL
+        // Get referral phone number from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const referralId = urlParams.get('ref') || '';
-        referrerInput.value = referralId;
+        const referralPhone = urlParams.get('ref') || '';
+        
+        // Show referral information if available
+        if (referralPhone) {
+            referralDisplay.style.display = 'flex';
+            referralPhoneSpan.textContent = referralPhone;
+        }
         
         // Password strength checker
         function checkPasswordStrength(password) {
@@ -548,7 +577,7 @@
                 isValid = false;
             }
             
-            // Validate password
+            // Validate password (minimum 6 characters as per Firebase)
             if (passwordInput.value.length < 6) {
                 document.getElementById('password-error').style.display = 'block';
                 isValid = false;
@@ -583,7 +612,7 @@
                     name: usernameInput.value,
                     email: emailInput.value,
                     phone: phoneInput.value,
-                    referrer: referrerInput.value,
+                    referrerPhone: referralPhone, // Store referrer's phone number
                     timestamp: serverTimestamp(),
                     uid: user.uid
                 };
@@ -599,7 +628,7 @@
                 
                 // Redirect after a delay
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html'; // Replace with your dashboard URL
+                    window.location.href = 'index.html'; // Replace with your dashboard URL
                 }, 2000);
                 
             } catch (error) {
