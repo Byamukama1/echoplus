@@ -467,7 +467,7 @@
       gap: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   ">
-    <i class="fas fa-user"></i>
+    <i class="fas fa-card"></i>
     <span>Deposit</span>
   </a>
 </div>
@@ -490,7 +490,7 @@
                 </div>
                 <div class="summary-item">
                     <div class="summary-value">UGX 42,600</div>
-                    <div class="summary-label">Pending Withdrawal</div>
+                    <div class="summary-label">uninvested deposit</div>
                 </div>
             </div>
         </div>
@@ -856,7 +856,7 @@
 
         // Update Firebase connection status
         const firebaseStatus = document.querySelector('.firebase-status');
-        firebaseStatus.innerHTML = '<i class="fas fa-check-circle"></i> <span>Connected to Firebase</span>';
+        firebaseStatus.innerHTML = '<i class="fas fa-check-circle"></i> <span>Active</span>';
         firebaseStatus.classList.add('connected');
 
         // Authentication check
