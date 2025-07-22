@@ -426,11 +426,7 @@
 </head>
 
 <body>
-    <!-- Firebase status indicator -->
-    <div class="firebase-status">
-        <i class="fas fa-circle-notch fa-spin"></i>
-        <span>Connecting to Firebase...</span>
-    </div>
+
 
  
 
@@ -828,68 +824,29 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
-            authDomain: "echoplus-e9606.firebaseapp.com",
-            projectId: "echoplus-e9606",
-            storageBucket: "echoplus-e9606.appspot.com",
-            messagingSenderId: "674979906304",
-            appId: "1:674979906304:web:7864593a26f571a268a9e5",
-            measurementId: "G-TYC9PSQFR2"
-        };
+   <script>
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+    authDomain: "echoplus-e9606.firebaseapp.com",
+    projectId: "echoplus-e9606",
+    storageBucket: "echoplus-e9606.appspot.com",
+    messagingSenderId: "674979906304",
+    appId: "1:674979906304:web:7864593a26f571a268a9e5",
+    measurementId: "G-TYC9PSQFR2"
+  };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-        // Update Firebase connection status
-        const firebaseStatus = document.querySelector('.firebase-status');
-        firebaseStatus.innerHTML = '<i class="fas fa-check-circle"></i> <span>Active</span>';
-        firebaseStatus.classList.add('connected');
-
-        // Authentication check
-        auth.onAuthStateChanged(user => {
-            if (!user) {
-                window.location.href = 'login.html';
-            }
-        });
-        
-            // Add click animation to buy buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            const buyButtons = document.querySelectorAll('.buy-button');
-            buyButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const originalContent = this.innerHTML;
-                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-                    this.disabled = true;
-
-                    setTimeout(() => {
-                        this.innerHTML = '<i class="fas fa-check"></i> Invested!';
-                        this.style.background = 'linear-gradient(135deg, #4cc9f0, #4895ef)';
-                        this.style.opacity = '0.9';
-
-                        // Reset button after 3 seconds
-                        setTimeout(() => {
-                            this.innerHTML = originalContent;
-                            this.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
-                            this.style.opacity = '1';
-                            this.disabled = false;
-                        }, 3000);
-                    }, 1500);
-                });
-            });
-
-            // Simulate active investments count
-            const activeInvestments = document.querySelector('.metric-value:last-child');
-            let count = 8;
-            setInterval(() => {
-                count = Math.min(10, count + Math.round(Math.random()));
-                activeInvestments.textContent = count;
-            }, 5000);
-        });
-    </script>
+  // Redirect unauthenticated users
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = 'login.html';
+    }
+  });
+</script>
 </body>
 </html>
