@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Products - Echoplus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding-bottom: 80px;
+    }
+
+    header {
+      background: white;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #4361ee;
+      margin: 0;
+    }
+
+    .products-container {
+      padding: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .product-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #212529;
+    }
+
+    .product-detail {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+
+    .nav-item.active {
+      color: #4361ee;
+    }
+
+    .nav-item i {
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>My Products</h1>
+</header>
+
+<div class="products-container" id="products-list">
+  <!-- Products will load here -->
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item">
+    <i class="fas fa-home"></i><span>Home</span>
+  </a>
+  <a href="products.html" class="nav-item active">
+    <i class="fas fa-chart-pie"></i><span>Products</span>
+  </a>
+  <a href="team.html" class="nav-item">
+    <i class="fas fa-users"></i><span>Team</span>
+  </a>
+  <a href="account.html" class="nav-item">
+    <i class="fas fa-user"></i><span>Account</span>
+  </a>
+</nav>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+    authDomain: "echoplus-e9606.firebaseapp.com",
+    projectId: "echoplus-e9606",
+    storageBucket: "echoplus-e9606.appspot.com",
+    messagingSenderId: "674979906304",
+    appId: "1:674979906304:web:7864593a26f571a268a9e5"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = 'login.html';
+    } else {
+      loadUserProducts(user.uid);
+    }
+  });
+
+  async function loadUserProducts(userId) {
+    const productsList = document.getElementById('products-list');
+    productsList.innerHTML = '<p>Loading...</p>';
+
+    try {
+      const snapshot = await db.collection('products')
+        .where('userId', '==', userId)
+        .get();
+
+      if (snapshot.empty) {
+        productsList.innerHTML = '<p>No products found.</p>';
+        return;
+      }
+
+      let html = '';
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        html += `
+          <div class="product-card">
+            <div class="product-title">${data.productType}</div>
+            <div class="product-detail"><span>Price:</span><span>UGX ${data.productPrice.toLocaleString()}</span></div>
+            <div class="product-detail"><span>Daily Income:</span><span>UGX ${data.dailyIncome.toLocaleString()}</span></div>
+            <div class="product-detail"><span>Total Revenue:</span><span>UGX ${data.totalRevenue.toLocaleString()}</span></div>
+            <div class="product-detail"><span>Days Remaining:</span><span>${data.remainingDays}</span></div>
+            <div class="product-detail"><span>Status:</span><span style="color:${data.status === 'active' ? 'green' : 'gray'}">${data.status}</span></div>
+          </div>
+        `;
+      });
+
+      productsList.innerHTML = html;
+    } catch (error) {
+      console.error("Failed to load products:", error);
+      productsList.innerHTML = '<p>Error loading products. Please try again.</p>';
+    }
+  }
+</script>
+
+</body>
+</html>
