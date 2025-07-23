@@ -6,7 +6,7 @@
     <title>Echoplus - Smart Investment Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-            * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -31,20 +31,20 @@
             color: var(--text);
             min-height: 100vh;
             padding-bottom: 70px;
-            font-size: 14px; /* Reduced base font size */
+            font-size: 14px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 10px; /* Reduced padding */
+            padding: 0 10px;
         }
 
         /* Header Styles */
         header {
-            padding: 12px 0; /* Reduced padding */
+            padding: 12px 0;
             background-color: var(--light);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -59,17 +59,17 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 8px; /* Reduced gap */
+            gap: 8px;
             font-weight: 700;
-            font-size: 1.1rem; /* Reduced font size */
+            font-size: 1.1rem;
             color: var(--primary);
         }
 
         .logo-icon {
-            width: 32px; /* Reduced size */
-            height: 32px; /* Reduced size */
+            width: 32px;
+            height: 32px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 8px; /* Reduced radius */
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -88,38 +88,38 @@
         }
 
         .logo-icon::before {
-            width: 24px; /* Reduced size */
-            height: 24px; /* Reduced size */
+            width: 24px;
+            height: 24px;
         }
 
         .logo-icon::after {
-            width: 16px; /* Reduced size */
-            height: 16px; /* Reduced size */
+            width: 16px;
+            height: 16px;
         }
 
         .logo-icon i {
             position: relative;
             z-index: 2;
-            font-size: 0.9rem; /* Reduced icon size */
+            font-size: 0.9rem;
         }
 
         .user-actions {
             display: flex;
-            gap: 8px; /* Reduced gap */
+            gap: 8px;
         }
 
         .action-btn {
             background: var(--light);
             border: 1px solid var(--medium-gray);
-            border-radius: 6px; /* Reduced radius */
-            padding: 6px 10px; /* Reduced padding */
-            font-size: 0.7rem; /* Reduced font size */
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.7rem;
             color: var(--text);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 4px; /* Reduced gap */
+            gap: 4px;
         }
 
         .action-btn:hover {
@@ -130,84 +130,84 @@
 
         /* Metrics Section */
         .metrics-section {
-            padding: 15px 0; /* Reduced padding */
+            padding: 15px 0;
         }
 
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Always 2 columns */
-            gap: 10px; /* Reduced gap */
-            margin-bottom: 15px; /* Reduced margin */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .metric-card {
             background-color: var(--light);
-            border-radius: 8px; /* Reduced radius */
-            padding: 12px; /* Reduced padding */
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03); /* Lighter shadow */
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--medium-gray);
         }
 
         .metric-label {
-            font-size: 0.7rem; /* Reduced font size */
+            font-size: 0.7rem;
             color: var(--text-light);
-            margin-bottom: 4px; /* Reduced margin */
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 4px; /* Reduced gap */
+            gap: 4px;
         }
 
         .metric-value {
-            font-size: 1.1rem; /* Reduced font size */
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary);
         }
 
         .metric-trend {
-            font-size: 0.65rem; /* Reduced font size */
+            font-size: 0.65rem;
             color: var(--success);
-            margin-top: 3px; /* Reduced margin */
+            margin-top: 3px;
             display: flex;
             align-items: center;
-            gap: 2px; /* Reduced gap */
+            gap: 2px;
         }
 
         /* Products Section */
         .products-section {
-            margin-top: 8px; /* Reduced margin */
+            margin-top: 8px;
         }
 
         .section-title {
-            font-size: 1.0rem; /* Reduced font size */
-            margin-bottom: 12px; /* Reduced margin */
+            font-size: 1.0rem;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 6px; /* Reduced gap */
+            gap: 6px;
             color: var(--text);
         }
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Always 2 columns */
-            gap: 12px; /* Reduced gap */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
         .product-card {
             background-color: var(--light);
-            border-radius: 10px; /* Reduced radius */
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03); /* Lighter shadow */
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--medium-gray);
             transition: all 0.2s ease;
         }
 
         .product-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .product-image {
-            height: 100px; /* Reduced height */
+            height: 100px;
             background: linear-gradient(135deg, var(--primary-light), var(--primary));
             display: flex;
             align-items: center;
@@ -216,31 +216,31 @@
         }
 
         .product-image img {
-            max-width: 75%; /* Slightly smaller */
-            max-height: 75%; /* Slightly smaller */
-            filter: drop-shadow(0 3px 8px rgba(0,0,0,0.2)); /* Lighter shadow */
-            border-radius: 3px; /* Reduced radius */
+            max-width: 75%;
+            max-height: 75%;
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,0.2));
+            border-radius: 3px;
         }
 
         .product-badge {
             position: absolute;
-            top: 8px; /* Reduced position */
-            right: 8px; /* Reduced position */
+            top: 8px;
+            right: 8px;
             background-color: var(--accent);
             color: white;
-            padding: 3px 6px; /* Reduced padding */
-            border-radius: 12px; /* Reduced radius */
-            font-size: 0.6rem; /* Reduced font size */
+            padding: 3px 6px;
+            border-radius: 12px;
+            font-size: 0.6rem;
             font-weight: 600;
         }
 
         .product-content {
-            padding: 12px; /* Reduced padding */
+            padding: 12px;
         }
 
         .product-title {
-            font-size: 0.8rem; /* Reduced font size */
-            margin-bottom: 6px; /* Reduced margin */
+            font-size: 0.8rem;
+            margin-bottom: 6px;
             font-weight: 600;
             color: var(--text);
             white-space: nowrap;
@@ -249,35 +249,34 @@
         }
 
         .product-price {
-            font-size: 0.95rem; /* Reduced font size */
+            font-size: 0.95rem;
             color: var(--primary);
             font-weight: 700;
-            margin-bottom: 8px; /* Reduced margin */
+            margin-bottom: 8px;
         }
 
-        /* Simplified product layout */
         .simplified-details {
             display: flex;
             flex-direction: column;
-            gap: 6px; /* Reduced gap */
-            margin-bottom: 12px; /* Reduced margin */
+            gap: 6px;
+            margin-bottom: 12px;
         }
 
         .simplified-detail {
             display: flex;
             justify-content: space-between;
-            font-size: 0.75rem; /* Reduced font size */
+            font-size: 0.75rem;
         }
 
         .simplified-label {
             color: var(--text-light);
-            font-size: 0.7rem; /* Reduced font size */
+            font-size: 0.7rem;
         }
 
         .simplified-value {
             font-weight: 500;
             color: var(--text);
-            font-size: 0.75rem; /* Reduced font size */
+            font-size: 0.75rem;
         }
 
         .buy-button {
@@ -285,16 +284,16 @@
             color: white;
             border: none;
             width: 100%;
-            padding: 8px; /* Reduced padding */
-            border-radius: 6px; /* Reduced radius */
+            padding: 8px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px; /* Reduced gap */
-            font-size: 0.75rem; /* Reduced font size */
+            gap: 5px;
+            font-size: 0.75rem;
         }
 
         .buy-button:hover {
@@ -311,17 +310,17 @@
             background-color: var(--light);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0; /* Reduced padding */
+            padding: 10px 0;
             border-top: 1px solid var(--medium-gray);
             z-index: 100;
-            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.6rem; /* Reduced font size */
+            font-size: 0.6rem;
             color: var(--text-light);
             transition: color 0.3s;
         }
@@ -331,17 +330,17 @@
         }
 
         .nav-item i {
-            font-size: 1.0rem; /* Reduced icon size */
-            margin-bottom: 2px; /* Reduced margin */
+            font-size: 1.0rem;
+            margin-bottom: 2px;
         }
 
         /* Status bar simulation */
         .status-bar {
             background-color: var(--light);
-            padding: 6px 10px; /* Reduced padding */
+            padding: 6px 10px;
             display: flex;
             justify-content: space-between;
-            font-size: 0.7rem; /* Reduced font size */
+            font-size: 0.7rem;
             color: var(--text);
             border-bottom: 1px solid var(--medium-gray);
         }
@@ -349,36 +348,36 @@
         .status-left, .status-right {
             display: flex;
             align-items: center;
-            gap: 3px; /* Reduced gap */
+            gap: 3px;
         }
 
         .status-center {
             font-weight: 600;
-            font-size: 0.75rem; /* Reduced font size */
+            font-size: 0.75rem;
         }
 
         .earnings-summary {
             background: white;
-            border-radius: 8px; /* Reduced radius */
-            padding: 12px; /* Reduced padding */
-            margin-bottom: 12px; /* Reduced margin */
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* Lighter shadow */
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             border: 1px solid #eaeaea;
         }
 
         .summary-title {
-            font-size: 0.9rem; /* Reduced font size */
-            margin-bottom: 8px; /* Reduced margin */
+            font-size: 0.9rem;
+            margin-bottom: 8px;
             color: var(--text-light);
             display: flex;
             align-items: center;
-            gap: 6px; /* Reduced gap */
+            gap: 6px;
         }
 
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px; /* Reduced gap */
+            gap: 8px;
         }
 
         .summary-item {
@@ -387,17 +386,16 @@
         }
 
         .summary-value {
-            font-size: 1.0rem; /* Reduced font size */
+            font-size: 1.0rem;
             font-weight: 700;
             color: var(--primary);
         }
 
         .summary-label {
-            font-size: 0.7rem; /* Reduced font size */
+            font-size: 0.7rem;
             color: var(--text-light);
         }
-
-        /* Firebase connection indicator */
+    /* Firebase connection indicator */
         .firebase-status {
             position: fixed;
             top: 10px;
@@ -422,83 +420,212 @@
         .firebase-status i {
             font-size: 0.8rem;
         }
+            /* New metrics section */
+        .account-metrics {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .metrics-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .metrics-title i {
+            background: var(--primary-light);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .account-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .account-metric {
+            background: var(--light-gray);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .account-metric-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+        
+        .account-metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .account-metric-desc {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        
+        /* Animation for metrics */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .account-metric-value {
+            animation: pulse 1.5s ease-in-out;
+        }
+        
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .account-metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s, top 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .notification.show {
+            top: 30px;
+            opacity: 1;
+        }
     </style>
-    </head>
+</head>
 
 <body>
     <!-- Header -->
     <header>
-  <div class="container">
-    <div class="header-content" style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
+        <div class="container">
+            <div class="header-content" style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
+                <!-- Logo and Title -->
+                <div class="logo" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div class="logo-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <div style="font-size: 20px; font-weight: 600;">ECHOPLUS</div>
+                </div>
 
-      <!-- Logo and Title -->
-      <div class="logo" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-        <div class="logo-icon">
-          <i class="fas fa-wave-square"></i>
+                <!-- Action Buttons -->
+                <div class="user-actions" style="display: flex; gap: 10px;">
+                    <a href="withdraws.html" class="action-btn" style="
+                        text-decoration: none;
+                        color: white;
+                        background-color: #007bff;
+                        padding: 6px 14px;
+                        font-size: 14px;
+                        border-radius: 6px;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+                    ">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Withdraw</span>
+                    </a>
+
+                    <a href="deposit.html" class="action-btn" style="
+                        text-decoration: none;
+                        color: white;
+                        background-color: #28a745;
+                        padding: 6px 14px;
+                        font-size: 14px;
+                        border-radius: 6px;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+                    ">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>Deposit</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div style="font-size: 20px; font-weight: 600;">ECHOPLUS</div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="user-actions" style="display: flex; gap: 10px;">
-        <a href="withdraws.html" class="action-btn" style="
-            text-decoration: none;
-            color: white;
-            background-color: #007bff;
-            padding: 6px 14px;
-            font-size: 14px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-        ">
-          <i class="fas fa-arrow-up"></i>
-          <span>Withdraw</span>
-        </a>
-
-        <a href="deposit.html" class="action-btn" style="
-            text-decoration: none;
-            color: white;
-            background-color: #28a745;
-            padding: 6px 14px;
-            font-size: 14px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-        ">
-          <i class="fas fa-arrow-down"></i>
-          <span>Deposit</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</header>
+    </header>
 
     <!-- Main Content -->
     <main class="container">
-        <!-- Earnings Summary -->
-        <div class="earnings-summary">
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <div id="todays-earnings" class="summary-value">0</div>
-                    <div class="summary-label">Today's Earnings</div>
+        <!-- Account Metrics Section -->
+        <div class="account-metrics">
+            <div class="metrics-title">
+                
+                <span>Account Summary</span>
+            </div>
+            
+            <div class="account-metrics-grid">
+                <div class="account-metric">
+                    <div class="account-metric-label">Account Balance</div>
+                    <div id="account-balance" class="account-metric-value">UGX 0</div>
+                    <div class="account-metric-desc">Available Funds</div>
                 </div>
-                <div class="summary-item">
-                    <div id="uninvested-deposit" class="summary-value">0</div>
-                    <div class="summary-label">Uninvested Deposit</div>
+                
+                <div class="account-metric">
+                    <div class="account-metric-label">Uninvested Deposit</div>
+                    <div id="uninvested-deposit" class="account-metric-value">UGX 0</div>
+                    <div class="account-metric-desc">Ready to invest</div>
+                </div>
+                
+                <div class="account-metric">
+                    <div class="account-metric-label">Total Earnings</div>
+                    <div id="total-earnings" class="account-metric-value">UGX 0</div>
+                    <div class="account-metric-desc">All-time income</div>
+                </div>
+                
+                <div class="account-metric">
+                    <div class="account-metric-label">Total Withdrawn</div>
+                    <div id="total-withdrawn" class="account-metric-value">UGX 0</div>
+                    <div class="account-metric-desc">Withdrawn funds</div>
                 </div>
             </div>
         </div>
 
-        <!-- Metrics Section -->
-        <section class="metrics-section">
-            <div class="metrics-grid">
-                <!-- ... (your existing metric cards) ... -->
+        <!-- Earnings Summary -->
+        <div class="earnings-summary">
+            <div class="summary-title">
+                
             </div>
-        </section>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div id="todays-earnings" class="summary-value">UGX 0</div>
+                    <div class="summary-label">Today's Earnings</div>
+                </div>
+                <div class="summary-item">
+                    <div id="active-investments" class="summary-value">0</div>
+                    <div class="summary-label">Active Investments</div>
+                </div>
+            </div>
+        </div>
 
         <!-- Products Section -->
         <section class="products-section">
@@ -602,7 +729,7 @@
                     </div>
                 </div>
 
-                <!-- Product 4 -->
+         <!-- Product 4 -->
                 <div class="product-card">
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Advanced Phone">
@@ -632,8 +759,7 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Product 5 -->
+          <!-- Product 5 -->
                 <div class="product-card">
                     <div class="product-image">
                         <div class="product-badge">HOT</div>
@@ -762,33 +888,32 @@
             </div>
         </section>
     </main>
-
+    
     <!-- Bottom Navigation -->
-<nav class="bottom-nav" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;">
-  <a href="index.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
-    <i class="fas fa-home"></i>
-    <span style="display: block; font-size: 12px;">Home</span>
-  </a>
-  <a href="products.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
-    <i class="fas fa-chart-pie"></i>
-    <span style="display: block; font-size: 12px;">Products</span>
-  </a>
-  <a href="team.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
-    <i class="fas fa-gift"></i>
-    <span style="display: block; font-size: 12px;">Team</span>
-  </a>
-  <a href="account.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
-    <i class="fas fa-user"></i>
-    <span style="display: block; font-size: 12px;">Account</span>
-  </a>
-</nav>
+    <nav class="bottom-nav" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;">
+        <a href="index.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+            <i class="fas fa-home"></i>
+            <span style="display: block; font-size: 12px;">Home</span>
+        </a>
+        <a href="products.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+            <i class="fas fa-chart-pie"></i>
+            <span style="display: block; font-size: 12px;">Products</span>
+        </a>
+        <a href="team.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+            <i class="fas fa-gift"></i>
+            <span style="display: block; font-size: 12px;">Team</span>
+        </a>
+        <a href="account.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+            <i class="fas fa-user"></i>
+            <span style="display: block; font-size: 12px;">Account</span>
+        </a>
+    </nav>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-    <script>
+<script>
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
@@ -811,7 +936,8 @@
         firebaseStatus.innerHTML = '<i class="fas fa-sync-alt"></i> <span>Connecting...</span>';
         document.body.appendChild(firebaseStatus);
 
-        // Session timeout variables
+
+     // Session timeout variables
         const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
         let sessionCheckInterval;
         
@@ -911,7 +1037,8 @@
                         totalWithdrawn: 0,
                         activeInvestments: 0,
                         uninvestedDeposit: 0,
-                        todaysEarnings: 0
+                        todaysEarnings: 0,
+                        accountBalance: 0
                     });
                     showNotification("User account created successfully!");
                 }
@@ -919,20 +1046,20 @@
                 const userData = userDoc.data();
                 
                 // Update UI with the latest data
-                document.getElementById('todays-earnings').textContent = 
-                    `UGX ${(userData.todaysEarnings || 0).toLocaleString()}`;
+                document.getElementById('account-balance').textContent = 
+                    `UGX ${(userData.accountBalance || 0).toLocaleString()}`;
                 
                 document.getElementById('uninvested-deposit').textContent = 
                     `UGX ${(userData.uninvestedDeposit || 0).toLocaleString()}`;
-                
-                document.getElementById('total-deposit').textContent = 
-                    `UGX ${(userData.totalDeposit || 0).toLocaleString()}`;
                 
                 document.getElementById('total-earnings').textContent = 
                     `UGX ${(userData.totalEarnings || 0).toLocaleString()}`;
                 
                 document.getElementById('total-withdrawn').textContent = 
                     `UGX ${(userData.totalWithdrawn || 0).toLocaleString()}`;
+                
+                document.getElementById('todays-earnings').textContent = 
+                    `UGX ${(userData.todaysEarnings || 0).toLocaleString()}`;
                 
                 document.getElementById('active-investments').textContent = 
                     userData.activeInvestments || 0;
@@ -994,7 +1121,7 @@
                     startDate: firebase.firestore.FieldValue.serverTimestamp()
                 });
                              
-                // Update user document
+                // Update user document - only subtract from uninvested deposit
                 await userRef.update({
                     uninvestedDeposit: firebase.firestore.FieldValue.increment(-price),
                     activeInvestments: firebase.firestore.FieldValue.increment(1)
@@ -1009,7 +1136,6 @@
                 button.disabled = false;
             }
         }
-
 
         // Check and handle session timeout
         function checkSessionTimeout() {
