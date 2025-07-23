@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Team - Echoplus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding-bottom: 80px;
+    }
+
+    header {
+      background: white;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #4361ee;
+      margin: 0;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .referral-box {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .referral-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .referral-link input {
+      flex: 1;
+      margin-right: 10px;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .referral-note {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    .referral-list {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .referral-item {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .referral-item:last-child {
+      border-bottom: none;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+
+    .nav-item.active {
+      color: #4361ee;
+    }
+
+    .nav-item i {
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+
+    .copy-btn {
+      padding: 6px 12px;
+      background-color: #4361ee;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>👥 My Team</h1>
+</header>
+
+<div class="container">
+  <div class="referral-box">
+    <div class="referral-link">
+      <input type="text" id="referralLink" readonly />
+      <button class="copy-btn" onclick="copyReferralLink()">Copy</button>
+    </div>
+    <div class="referral-note">
+      Share this link to earn 25% of your referral's deposit. Rewards are added automatically.
+    </div>
+  </div>
+
+  <div class="referral-list" id="referralList">
+    <p>Loading referred users...</p>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item">
+    <i class="fas fa-home"></i><span>Home</span>
+  </a>
+  <a href="products.html" class="nav-item">
+    <i class="fas fa-chart-pie"></i><span>Products</span>
+  </a>
+  <a href="team.html" class="nav-item active">
+    <i class="fas fa-users"></i><span>Team</span>
+  </a>
+  <a href="account.html" class="nav-item">
+    <i class="fas fa-user"></i><span>Account</span>
+  </a>
+</nav>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+    authDomain: "echoplus-e9606.firebaseapp.com",
+    projectId: "echoplus-e9606",
+    storageBucket: "echoplus-e9606.appspot.com",
+    messagingSenderId: "674979906304",
+    appId: "1:674979906304:web:7864593a26f571a268a9e5"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  auth.onAuthStateChanged(async user => {
+    if (!user) return window.location.href = 'login.html';
+
+    try {
+      const userDoc = await db.collection('users').doc(user.uid).get();
+      const userData = userDoc.data();
+
+      const phone = userData.phone;
+      const referralLink = `${window.location.origin}/signup.html?ref=${phone}`;
+      document.getElementById('referralLink').value = referralLink;
+
+      loadReferrals(phone);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('referralList').innerHTML = "<p>Error loading referrals.</p>";
+    }
+  });
+
+  function copyReferralLink() {
+    const input = document.getElementById("referralLink");
+    input.select();
+    input.setSelectionRange(0, 99999); // For mobile
+    document.execCommand("copy");
+    alert("✅ Referral link copied!");
+  }
+
+  async function loadReferrals(refPhone) {
+    const list = document.getElementById('referralList');
+    list.innerHTML = "";
+
+    try {
+      const snapshot = await db.collection('users')
+        .where('referrerPhone', '==', refPhone)
+        .get();
+
+      if (snapshot.empty) {
+        list.innerHTML = "<p>No referrals yet.</p>";
+        return;
+      }
+
+      snapshot.forEach(async doc => {
+        const data = doc.data();
+        const phone = data.phone;
+        const uid = data.uid;
+
+        const depositSnap = await db.collection('deposits')
+          .where('userId', '==', uid)
+          .where('status', '==', 'paid')
+          .get();
+
+        let totalDeposit = 0;
+        depositSnap.forEach(dep => {
+          totalDeposit += dep.data().amount;
+        });
+
+        const reward = Math.floor(totalDeposit * 0.25);
+
+        list.innerHTML += `
+          <div class="referral-item">
+            <span>${phone}</span>
+            <span>UGX ${totalDeposit.toLocaleString()}</span>
+            <span>UGX ${reward.toLocaleString()}</span>
+          </div>
+        `;
+      });
+    } catch (err) {
+      console.error(err);
+      list.innerHTML = "<p>Error fetching referrals.</p>";
+    }
+  }
+</script>
+
+</body>
+</html>
