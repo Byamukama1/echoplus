@@ -71,7 +71,7 @@
     }
 
     .alert {
-      margin-top: 20px;
+      margin-bottom: 20px;
       background-color: #eaf4ff;
       padding: 15px;
       border-left: 4px solid #007bff;
@@ -109,62 +109,86 @@
 </head>
 <body>
 
-  <div class="container">
-    <h2 class="header">Deposit to Echoplus</h2>
-    <p class="note">Your money will reflect on your account in less than 2 minutes after payment.</p>
-    
-    <form id="depositForm">
-      <label for="phone">Your Phone Number</label>
-      <input type="tel" id="phone" required placeholder="e.g. 077XXXXXXX" />
+<div class="container">
+  <h2 class="header">Deposit to Echoplus</h2>
+  
 
-      <label for="owner">Sim Card Owner Name</label>
-      <input type="text" id="owner" required placeholder="Full Name" />
-
-      <label for="amount">Amount (UGX)</label>
-      <input type="number" id="amount" required placeholder="e.g. 10000" />
-
-      <button type="submit">Submit Deposit</button>
-    </form>
-
-    <div id="alertBox" class="alert" style="display: none;">
-      <strong>Next Step:</strong> Send the money to <span class="copy-phone" id="businessPhone">0751234567</span>
-      <div class="copy-section">
-        <small>Click to copy:</small>
-        <button class="copy-btn" onclick="copyPhone()">Copy</button>
-      </div>
-      <p style="margin-top:10px;">After sending, please check your account. Your deposit will be confirmed shortly.</p>
+  <!-- Deposit Instructions -->
+  <div class="alert">
+    <strong>Deposit Instructions:</strong><br><br>
+    Send mobile money to the number below:
+    <div style="margin: 10px 0;">
+      <span class="copy-phone" id="businessPhone">0791430082</span><br>
+      <small style="color: #555;">Account Name: <strong>DIADONE MASEREKA</strong></small>
     </div>
+
+    <div class="copy-section">
+      <small>Click to copy number:</small>
+      <button class="copy-btn" onclick="copyPhone()">Copy</button>
+    </div>
+
+    <p style="margin-top: 10px;">
+      After sending money, fill in the form below with your phone number, name, and amount to confirm your deposit.
+    </p>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script type="module">
+  <!-- Deposit Form -->
+  <form id="depositForm">
+    <label for="phone">Your Phone Number</label>
+    <input type="tel" id="phone" required placeholder="e.g. 077XXXXXXX" />
+
+    <label for="owner">Sim Card Owner Name</label>
+    <input type="text" id="owner" required placeholder="Full Name" />
+
+    <label for="amount">Amount (UGX)</label>
+    <input type="number" id="amount" required placeholder="e.g. 10000" />
+
+    <button type="submit">Submit Deposit</button>
+  </form>
+</div>
+
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
     authDomain: "echoplus-e9606.firebaseapp.com",
     projectId: "echoplus-e9606",
-    storageBucket: "echoplus-e9606.firebasestorage.app",
+    storageBucket: "echoplus-e9606.appspot.com",
     messagingSenderId: "674979906304",
-    appId: "1:674979906304:web:7864593a26f571a268a9e5",
-    measurementId: "G-TYC9PSQFR2"
+    appId: "1:674979906304:web:7864593a26f571a268a9e5"
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
-
   const depositForm = document.getElementById('depositForm');
+
+  const sessionTimeoutMs = 60 * 60 * 1000;
+
+  function checkSessionTimeout() {
+    const loginTime = localStorage.getItem("loginTime");
+    if (!loginTime) return;
+
+    const now = Date.now();
+    if (now - parseInt(loginTime) > sessionTimeoutMs) {
+      signOut(auth).then(() => {
+        localStorage.removeItem("loginTime");
+        alert("Your session has expired. Please log in again.");
+        window.location.href = "login.html";
+      });
+    }
+  }
 
   function showLoginPopup() {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        console.log("Logged in as:", user.email);
-        setupDepositForm(user); // continue deposit setup
+        localStorage.setItem("loginTime", Date.now().toString());
+        setupDepositForm(user);
       })
       .catch((error) => {
         console.error("Login failed:", error);
@@ -175,6 +199,8 @@
   function setupDepositForm(user) {
     depositForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      checkSessionTimeout();
+
       const phone = document.getElementById('phone').value.trim();
       const owner = document.getElementById('owner').value.trim();
       const amount = parseInt(document.getElementById('amount').value.trim());
@@ -206,12 +232,28 @@
   }
 
   onAuthStateChanged(auth, (user) => {
+    checkSessionTimeout();
+
     if (user) {
+      const loginTime = localStorage.getItem("loginTime");
+      if (!loginTime) {
+        localStorage.setItem("loginTime", Date.now().toString());
+      }
       setupDepositForm(user);
     } else {
       showLoginPopup();
     }
   });
 </script>
+
+<script>
+  function copyPhone() {
+    const phone = document.getElementById("businessPhone").innerText;
+    navigator.clipboard.writeText(phone).then(() => {
+      alert("Phone number copied to clipboard!");
+    });
+  }
+</script>
+
 </body>
 </html>
