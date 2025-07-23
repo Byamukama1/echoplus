@@ -64,6 +64,12 @@
       background-color: #0022aa;
     }
 
+    .info-box {
+      margin: 10px 0;
+      font-weight: 600;
+      color: #333;
+    }
+
     .table-container {
       margin-top: 40px;
     }
@@ -92,12 +98,6 @@
     .pending { color: #ff8800; }
     .approved { color: #28a745; }
     .rejected { color: #dc3545; }
-
-    .balance-box {
-      margin-top: 10px;
-      font-weight: 600;
-      color: #333;
-    }
   </style>
 </head>
 <body>
@@ -105,12 +105,11 @@
 <div class="container">
   <h2>Withdraw Funds</h2>
   <p class="summary">
-    Minimum withdrawal is <strong>UGX 10,000</strong>. You can only withdraw from your available total earnings.
+    Minimum withdrawal is <strong>UGX 10,000</strong>. You can only withdraw from your account balance.
   </p>
 
-  <div class="balance-box">
-    Your Total Earnings: <span id="totalEarnings">UGX 0</span>
-  </div>
+  <div class="info-box">Total Earnings: <span id="totalEarnings">UGX 0</span></div>
+  <div class="info-box">Account Balance: <span id="accountBalance">UGX 0</span></div>
 
   <form id="withdrawForm">
     <label for="phone">Phone Number to Receive Funds</label>
@@ -127,7 +126,7 @@
 
   <div class="table-container">
     <h3>My Withdrawal History</h3>
-    <table id="withdrawTable">
+    <table>
       <thead>
         <tr>
           <th>Date</th>
@@ -142,7 +141,6 @@
   </div>
 </div>
 
-<!-- Firebase Script -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -164,14 +162,16 @@
   const form = document.getElementById('withdrawForm');
   const withdrawBody = document.getElementById('withdrawBody');
   const earningsDisplay = document.getElementById('totalEarnings');
+  const balanceDisplay = document.getElementById('accountBalance');
 
   let currentUser;
   let totalEarnings = 0;
+  let accountBalance = 0;
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
-      await fetchTotalEarnings(user.uid);
+      await fetchUserData(user.uid);
       loadWithdrawals(user.uid);
     } else {
       alert("You must log in to access this page.");
@@ -179,17 +179,26 @@
     }
   });
 
-  async function fetchTotalEarnings(uid) {
+  async function fetchUserData(uid) {
     try {
       const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
         const data = userSnap.data();
         totalEarnings = data.totalEarnings || 0;
+        const totalWithdrawn = data.totalWithdrawn || 0;
+        accountBalance = totalEarnings - totalWithdrawn;
+
+        // Update Firestore with accountBalance
+        await updateDoc(userRef, {
+          accountBalance
+        });
+
         earningsDisplay.textContent = `UGX ${totalEarnings.toLocaleString()}`;
+        balanceDisplay.textContent = `UGX ${accountBalance.toLocaleString()}`;
       }
     } catch (error) {
-      console.error("Failed to fetch earnings:", error);
+      console.error("Error fetching user data:", error);
     }
   }
 
@@ -209,8 +218,8 @@
       return;
     }
 
-    if (amount > totalEarnings) {
-      alert("You cannot withdraw more than your total earnings.");
+    if (amount > accountBalance) {
+      alert("You cannot withdraw more than your current account balance.");
       return;
     }
 
@@ -222,13 +231,15 @@
         const userData = userSnap.data();
         const prevWithdrawn = userData.totalWithdrawn || 0;
         const newWithdrawn = prevWithdrawn + amount;
+        const newBalance = totalEarnings - newWithdrawn;
 
-        // Update user's totalWithdrawn
+        // Update user's withdraw + balance
         await updateDoc(userRef, {
-          totalWithdrawn: newWithdrawn
+          totalWithdrawn: newWithdrawn,
+          accountBalance: newBalance
         });
 
-        // Add withdraw request
+        // Add withdrawal request
         await addDoc(collection(db, "withdraws"), {
           userId: currentUser.uid,
           phone,
@@ -241,7 +252,7 @@
         alert("Withdrawal request submitted.");
         form.reset();
         loadWithdrawals(currentUser.uid);
-        await fetchTotalEarnings(currentUser.uid);
+        await fetchUserData(currentUser.uid);
       }
     } catch (err) {
       console.error(err);
