@@ -145,7 +145,7 @@
 <!-- Firebase Script -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
@@ -215,18 +215,34 @@
     }
 
     try {
-      await addDoc(collection(db, "withdraws"), {
-        userId: currentUser.uid,
-        phone,
-        holder,
-        amount,
-        status: "pending",
-        createdAt: serverTimestamp()
-      });
+      const userRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userRef);
 
-      alert("Withdrawal request submitted.");
-      form.reset();
-      loadWithdrawals(currentUser.uid);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const prevWithdrawn = userData.totalWithdrawn || 0;
+        const newWithdrawn = prevWithdrawn + amount;
+
+        // Update user's totalWithdrawn
+        await updateDoc(userRef, {
+          totalWithdrawn: newWithdrawn
+        });
+
+        // Add withdraw request
+        await addDoc(collection(db, "withdraws"), {
+          userId: currentUser.uid,
+          phone,
+          holder,
+          amount,
+          status: "pending",
+          createdAt: serverTimestamp()
+        });
+
+        alert("Withdrawal request submitted.");
+        form.reset();
+        loadWithdrawals(currentUser.uid);
+        await fetchTotalEarnings(currentUser.uid);
+      }
     } catch (err) {
       console.error(err);
       alert("Failed to submit withdrawal.");
