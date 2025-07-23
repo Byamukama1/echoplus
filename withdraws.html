@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdraw - Echoplus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f3f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #0033cc;
+      margin-bottom: 10px;
+    }
+
+    p.summary {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    button {
+      background-color: #0033cc;
+      color: white;
+      padding: 14px;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0022aa;
+    }
+
+    .table-container {
+      margin-top: 40px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    table th, table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #f1f1f1;
+    }
+
+    .status {
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+
+    .pending {
+      color: #ff8800;
+    }
+
+    .approved {
+      color: #28a745;
+    }
+
+    .rejected {
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Withdraw Funds</h2>
+  <p class="summary">
+    Minimum withdrawal is <strong>UGX 10,000</strong>. Provide your details below to request a withdrawal.
+  </p>
+
+  <form id="withdrawForm">
+    <label for="phone">Phone Number to Receive Funds</label>
+    <input type="tel" id="phone" required placeholder="e.g. 077XXXXXXX">
+
+    <label for="holder">Account Holder Name</label>
+    <input type="text" id="holder" required placeholder="Full Name">
+
+    <label for="amount">Amount (UGX)</label>
+    <input type="number" id="amount" required placeholder="Minimum 10000">
+
+    <button type="submit">Submit Withdrawal</button>
+  </form>
+
+  <div class="table-container">
+    <h3>My Withdrawal History</h3>
+    <table id="withdrawTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="withdrawBody">
+        <tr><td colspan="3">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+    authDomain: "echoplus-e9606.firebaseapp.com",
+    projectId: "echoplus-e9606",
+    storageBucket: "echoplus-e9606.appspot.com",
+    messagingSenderId: "674979906304",
+    appId: "1:674979906304:web:7864593a26f571a268a9e5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  const form = document.getElementById('withdrawForm');
+  const withdrawBody = document.getElementById('withdrawBody');
+
+  let currentUser;
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      loadWithdrawals(user.uid);
+    } else {
+      alert("You must log in to access this page.");
+      window.location.href = "login.html";
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('phone').value.trim();
+    const holder = document.getElementById('holder').value.trim();
+    const amount = parseInt(document.getElementById('amount').value.trim());
+
+    if (!phone || !holder || !amount) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    if (amount < 10000) {
+      alert("Minimum withdrawal amount is UGX 10,000.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "withdraws"), {
+        userId: currentUser.uid,
+        phone,
+        holder,
+        amount,
+        status: "pending",
+        createdAt: serverTimestamp()
+      });
+
+      alert("Withdrawal request submitted.");
+      form.reset();
+      loadWithdrawals(currentUser.uid);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit withdrawal.");
+    }
+  });
+
+  async function loadWithdrawals(uid) {
+    const q = query(
+      collection(db, "withdraws"),
+      where("userId", "==", uid),
+      orderBy("createdAt", "desc")
+    );
+
+    const snapshot = await getDocs(q);
+    withdrawBody.innerHTML = "";
+
+    if (snapshot.empty) {
+      withdrawBody.innerHTML = "<tr><td colspan='3'>No withdrawal history found.</td></tr>";
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const date = data.createdAt?.toDate().toLocaleString() || "Pending";
+      const statusClass = data.status.toLowerCase();
+
+      const row = `
+        <tr>
+          <td>${date}</td>
+          <td>UGX ${data.amount.toLocaleString()}</td>
+          <td class="status ${statusClass}">${data.status}</td>
+        </tr>
+      `;
+      withdrawBody.innerHTML += row;
+    });
+  }
+</script>
+
+</body>
+</html>
