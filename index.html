@@ -6,7 +6,7 @@
     <title>Echoplus - Smart Investment Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
+            * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -423,12 +423,11 @@
             font-size: 0.8rem;
         }
     </style>
-</head>
-
+    </head>
 
 <body>
-       <!-- Header -->
-<header>
+    <!-- Header -->
+    <header>
   <div class="container">
     <div class="header-content" style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
 
@@ -478,8 +477,7 @@
   </div>
 </header>
 
-
-       <!-- Main Content -->
+    <!-- Main Content -->
     <main class="container">
         <!-- Earnings Summary -->
         <div class="earnings-summary">
@@ -498,40 +496,9 @@
         <!-- Metrics Section -->
         <section class="metrics-section">
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-label">
-                        <i class="fas fa-wallet"></i>
-                        <span>Total Deposit</span>
-                    </div>
-                    <div id="total-deposit" class="metric-value">0</div>
-                </div>
-
-                <div class="metric-card">
-                    <div class="metric-label">
-                        <i class="fas fa-coins"></i>
-                        <span>Total Earnings</span>
-                    </div>
-                    <div id="total-earnings" class="metric-value">0</div>
-                </div>
-
-                <div class="metric-card">
-                    <div class="metric-label">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <span>Total Withdrawn</span>
-                    </div>
-                    <div id="total-withdrawn" class="metric-value">0</div>
-                </div>
-
-                <div class="metric-card">
-                    <div class="metric-label">
-                        <i class="fas fa-sun"></i>
-                        <span>Active Investments</span>
-                    </div>
-                    <div id="active-investments" class="metric-value">0</div>
-                </div>
+                <!-- ... (your existing metric cards) ... -->
             </div>
         </section>
-    </main>
 
         <!-- Products Section -->
         <section class="products-section">
@@ -565,7 +532,7 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="1" data-price="25000" data-title="Value Phone" data-daily="5000" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
@@ -596,14 +563,14 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="2" data-price="50000" data-title="Standard Phone" data-daily="12000" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
                     </div>
                 </div>
 
-                 <!-- Product 3 -->
+                <!-- Product 3 -->
                 <div class="product-card">
                     <div class="product-image">
                         <div class="product-badge">POPULAR</div>
@@ -628,7 +595,7 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="3" data-price="80000" data-title="Premium Phone" data-daily="22500" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
@@ -659,7 +626,7 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="4" data-price="120000" data-title="Advanced Phone" data-daily="35000" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
@@ -691,13 +658,14 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="5" data-price="280000" data-title="Business Phone" data-daily="65000" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
                     </div>
                 </div>
-                                <!-- Product 6 -->
+                
+                <!-- Product 6 -->
                 <div class="product-card">
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600" alt="Pro Phone">
@@ -721,7 +689,7 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="6" data-price="360000" data-title="Pro Phone" data-daily="85000" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
@@ -753,7 +721,7 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="7" data-price="650000" data-title="Luxury Phone" data-daily="110000" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
@@ -785,7 +753,7 @@
                             </div>
                         </div>
 
-                        <button class="buy-button">
+                        <button class="buy-button" data-id="8" data-price="1000000" data-title="Flagship Phone" data-daily="300000" data-cycle="80">
                             <i class="fas fa-shopping-cart"></i>
                             <span>INVEST</span>
                         </button>
@@ -795,186 +763,159 @@
         </section>
     </main>
 
-  <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <div class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-chart-pie"></i>
-            <span>Products</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-gift"></i>
-            <span>Team</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-user"></i>
-            <span>Account</span>
-        </div>
-    </nav>
+    <!-- Bottom Navigation -->
+<nav class="bottom-nav" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;">
+  <a href="index.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+    <i class="fas fa-home"></i>
+    <span style="display: block; font-size: 12px;">Home</span>
+  </a>
+  <a href="products.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+    <i class="fas fa-chart-pie"></i>
+    <span style="display: block; font-size: 12px;">Products</span>
+  </a>
+  <a href="team.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+    <i class="fas fa-gift"></i>
+    <span style="display: block; font-size: 12px;">Team</span>
+  </a>
+  <a href="account.html" class="nav-item" style="text-align: center; color: #333; text-decoration: none;">
+    <i class="fas fa-user"></i>
+    <span style="display: block; font-size: 12px;">Account</span>
+  </a>
+</nav>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+            authDomain: "echoplus-e9606.firebaseapp.com",
+            projectId: "echoplus-e9606",
+            storageBucket: "echoplus-e9606.appspot.com",
+            messagingSenderId: "674979906304",
+            appId: "1:674979906304:web:7864593a26f571a268a9e5",
+            measurementId: "G-TYC9PSQFR2"
+        };
 
-<script>
-    // Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
-        authDomain: "echoplus-e9606.firebaseapp.com",
-        projectId: "echoplus-e9606",
-        storageBucket: "echoplus-e9606.appspot.com",
-        messagingSenderId: "674979906304",
-        appId: "1:674979906304:web:7864593a26f571a268a9e5",
-        measurementId: "G-TYC9PSQFR2"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    // UI Elements
-    const firebaseStatus = document.getElementById('firebase-status');
-    const notification = document.getElementById('notification');
-    const loadingOverlay = document.getElementById('loading-overlay');
-    
-    // Session timeout variables
-    const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
-    let sessionCheckInterval;
-    
-    // Show notification function
-    function showNotification(message, isError = false) {
-        notification.textContent = message;
-        notification.className = 'notification';
-        if (isError) notification.classList.add('error');
-        else notification.classList.add('show');
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
         
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
-    
-    // Show loading indicator
-    function showLoading(show) {
-        loadingOverlay.style.display = show ? 'flex' : 'none';
-    }
-    
-    // Update Firebase status
-    function updateFirebaseStatus(connected) {
-        if (connected) {
-            firebaseStatus.innerHTML = '<i class="fas fa-check-circle"></i> <span>Connected</span>';
-            firebaseStatus.classList.add('connected');
-        } else {
-            firebaseStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> <span>Disconnected</span>';
-            firebaseStatus.classList.remove('connected');
-        }
-    }
-    
-    // Check and handle session timeout
-    function checkSessionTimeout() {
-        const loginTime = localStorage.getItem('loginTime');
-        if (!loginTime) return;
+        // UI Elements
+        const firebaseStatus = document.createElement('div');
+        firebaseStatus.className = 'firebase-status';
+        firebaseStatus.innerHTML = '<i class="fas fa-sync-alt"></i> <span>Connecting...</span>';
+        document.body.appendChild(firebaseStatus);
+
+        // Session timeout variables
+        const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+        let sessionCheckInterval;
         
-        const now = Date.now();
-        if (now - parseInt(loginTime) > SESSION_DURATION) {
-            // Session expired
-            auth.signOut().then(() => {
-                localStorage.removeItem('loginTime');
-                showNotification("Session expired. Please log in again.", true);
+        // Show notification function
+        function showNotification(message, isError = false) {
+            // Remove any existing notification
+            const existingNotif = document.querySelector('.notification');
+            if (existingNotif) existingNotif.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            
+            if (isError) {
+                notification.style.backgroundColor = '#ff6b6b';
+            } else {
+                notification.style.backgroundColor = '#4caf50';
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
                 setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-            });
+                    notification.remove();
+                }, 300);
+            }, 3000);
         }
-    }
-    
-    // Monitor connection status
-    db.enableNetwork()
-        .then(() => {
-            updateFirebaseStatus(true);
-        })
-        .catch((error) => {
-            updateFirebaseStatus(false);
-            console.error("Firebase connection error:", error);
-        });
+        
+        // Update Firebase status
+        function updateFirebaseStatus(connected) {
+            if (connected) {
+                firebaseStatus.innerHTML = '<i class="fas fa-check-circle"></i> <span>Connected</span>';
+                firebaseStatus.classList.add('connected');
+            } else {
+                firebaseStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> <span>Disconnected</span>';
+                firebaseStatus.classList.remove('connected');
+            }
+        }
+        
+        // Monitor connection status
+        db.enableNetwork()
+            .then(() => {
+                updateFirebaseStatus(true);
+            })
+            .catch((error) => {
+                updateFirebaseStatus(false);
+                console.error("Firebase connection error:", error);
+            });
 
-    // Set auth persistence to SESSION and initialize session timeout
-    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        .then(() => {
-            auth.onAuthStateChanged(user => {
-                if (!user) {
-                    window.location.href = 'login.html';
-                } else {
-                    // Set login time if not already set
-                    if (!localStorage.getItem('loginTime')) {
-                        localStorage.setItem('loginTime', Date.now());
+        // Set auth persistence to SESSION and initialize session timeout
+        auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+            .then(() => {
+                auth.onAuthStateChanged(user => {
+                    if (!user) {
+                        window.location.href = 'login.html';
+                    } else {
+                        // Set login time if not already set
+                        if (!localStorage.getItem('loginTime')) {
+                            localStorage.setItem('loginTime', Date.now());
+                        }
+                        
+                        // Start session timeout checks
+                        clearInterval(sessionCheckInterval);
+                        sessionCheckInterval = setInterval(checkSessionTimeout, 60000); // Check every minute
+                        
+                        updateDashboard();
                     }
-                    
-                    // Start session timeout checks
-                    clearInterval(sessionCheckInterval);
-                    sessionCheckInterval = setInterval(checkSessionTimeout, 60000); // Check every minute
-                    
-                    showLoading(true);
-                    updateDashboard();
-                }
+                });
+            })
+            .catch((error) => {
+                console.error("Persistence error:", error);
+                window.location.href = 'login.html';
             });
-        })
-        .catch((error) => {
-            console.error("Persistence error:", error);
-            window.location.href = 'login.html';
-        });
 
-    // Update dashboard with user data
-    async function updateDashboard() {
-        const user = auth.currentUser;
-        if (!user) return;
+        // Update dashboard with user data
+        async function updateDashboard() {
+            const user = auth.currentUser;
+            if (!user) return;
 
-        try {
-            // 1. Calculate total paid deposits
-            const depositsSnapshot = await db.collection('deposits')
-                .where('userId', '==', user.uid)
-                .where('status', '==', 'paid')
-                .get();
-            
-            let totalDeposit = 0;
-            depositsSnapshot.forEach(doc => {
-                totalDeposit += doc.data().amount;
-            });
-            
-            // 2. Calculate total invested amount (from products collection)
-            const productsSnapshot = await db.collection('products')
-                .where('userId', '==', user.uid)
-                .get();
-            
-            let totalInvested = 0;
-            let activeInvestments = 0;
-            productsSnapshot.forEach(doc => {
-                const data = doc.data();
-                totalInvested += data.productPrice;
-                if (data.status === 'active') {
-                    activeInvestments++;
+            try {
+                // 1. Get user document
+                const userRef = db.collection('users').doc(user.uid);
+                const userDoc = await userRef.get();
+                
+                if (!userDoc.exists) {
+                    // Create user document if it doesn't exist
+                    await userRef.set({
+                        email: user.email || '',
+                        phone: '',
+                        totalDeposit: 0,
+                        totalEarnings: 0,
+                        totalWithdrawn: 0,
+                        activeInvestments: 0,
+                        uninvestedDeposit: 0,
+                        todaysEarnings: 0
+                    });
+                    showNotification("User account created successfully!");
                 }
-            });
-            
-            // 3. Calculate uninvested deposit
-            const uninvestedDeposit = totalDeposit - totalInvested;
-            
-            // 4. Update user document with calculated values
-            const userRef = db.collection('users').doc(user.uid);
-            await userRef.update({
-                totalDeposit: totalDeposit,
-                uninvestedDeposit: uninvestedDeposit,
-                activeInvestments: activeInvestments
-            });
-            
-            // 5. Get updated user data
-            const userDoc = await userRef.get();
-            if (userDoc.exists) {
+                
                 const userData = userDoc.data();
                 
                 // Update UI with the latest data
@@ -995,104 +936,111 @@
                 
                 document.getElementById('active-investments').textContent = 
                     userData.activeInvestments || 0;
+                
+                showNotification("Dashboard updated successfully!");
+            } catch (error) {
+                console.error("Dashboard update error:", error);
+                showNotification(`Error: ${error.message}`, true);
             }
-            
-            showNotification("Dashboard updated successfully!");
-        } catch (error) {
-            console.error("Dashboard update error:", error);
-            showNotification(`Error: ${error.message}`, true);
-        } finally {
-            showLoading(false);
         }
-    }
 
-    // Handle investment purchases
-    async function handleInvestment(event) {
-        const button = event.currentTarget;
-        button.disabled = true;
-        showLoading(true);
-
-        try {
-            const productId = button.dataset.id;
-            const price = parseInt(button.dataset.price);
-            const title = button.dataset.title;
-            const dailyIncome = parseInt(button.dataset.daily);
-            const cycle = parseInt(button.dataset.cycle);
-            const totalRevenue = dailyIncome * cycle;
-
-            const user = auth.currentUser;
-            if (!user) {
-                showNotification('Please login first', true);
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Get user data
-            const userRef = db.collection('users').doc(user.uid);
-            const userDoc = await userRef.get();
+        // Handle investment purchases
+        async function handleInvestment(event) {
+            const button = event.currentTarget;
+            button.disabled = true;
             
-            if (!userDoc.exists) {
-                throw new Error('User account not found');
+            try {
+                const productId = button.dataset.id;
+                const price = parseInt(button.dataset.price);
+                const title = button.dataset.title;
+                const dailyIncome = parseInt(button.dataset.daily);
+                const cycle = parseInt(button.dataset.cycle);
+                const totalRevenue = dailyIncome * cycle;
+
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('Please login first', true);
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Get user data
+                const userRef = db.collection('users').doc(user.uid);
+                const userDoc = await userRef.get();
+                
+                if (!userDoc.exists) {
+                    throw new Error('User account not found');
+                }
+
+                const userData = userDoc.data();
+                const uninvested = userData.uninvestedDeposit || 0;
+
+                if (uninvested < price) {
+                    showNotification('Insufficient funds. Please deposit more money.', true);
+                    return;
+                }
+
+                // Create investment document in products collection
+                await db.collection('products').add({
+                    userId: user.uid,
+                    productType: title,
+                    productPrice: price,
+                    dailyIncome: dailyIncome,
+                    totalCycle: cycle,
+                    remainingDays: cycle,
+                    amountEarnedSoFar: 0,
+                    totalRevenue: totalRevenue,
+                    status: 'active',
+                    startDate: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                             
+                // Update user document
+                await userRef.update({
+                    uninvestedDeposit: firebase.firestore.FieldValue.increment(-price),
+                    activeInvestments: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                showNotification('Investment successful!');
+                updateDashboard();
+            } catch (error) {
+                console.error("Investment error:", error);
+                showNotification(`Error: ${error.message}`, true);
+            } finally {
+                button.disabled = false;
             }
+        }
 
-            const userData = userDoc.data();
-            const uninvested = userData.uninvestedDeposit || 0;
 
-            if (uninvested < price) {
-                showNotification('Insufficient funds. Please deposit more money.', true);
-                return;
-            }
-
-            // Create a batched write to ensure atomic transaction
-            const batch = db.batch();
+        // Check and handle session timeout
+        function checkSessionTimeout() {
+            const loginTime = localStorage.getItem('loginTime');
+            if (!loginTime) return;
             
-            // Update user document
-            batch.update(userRef, {
-                uninvestedDeposit: firebase.firestore.FieldValue.increment(-price),
-                activeInvestments: firebase.firestore.FieldValue.increment(1)
+            const now = Date.now();
+            if (now - parseInt(loginTime) > SESSION_DURATION) {
+                // Session expired
+                auth.signOut().then(() => {
+                    localStorage.removeItem('loginTime');
+                    showNotification("Session expired. Please log in again.", true);
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                });
+            }
+        }
+
+        // Attach events after DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const buyButtons = document.querySelectorAll('.buy-button');
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', handleInvestment);
             });
             
-            // Create investment document in products collection
-            const investmentRef = db.collection('products').doc();
-            batch.set(investmentRef, {
-                userId: user.uid,
-                productType: title,
-                productPrice: price,
-                dailyIncome: dailyIncome,
-                totalCycle: cycle,
-                remainingDays: cycle,
-                amountEarnedSoFar: 0,
-                totalRevenue: totalRevenue,
-                status: 'active',
-                startDate: firebase.firestore.FieldValue.serverTimestamp()
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                clearInterval(sessionCheckInterval);
             });
-            
-            // Commit the batch
-            await batch.commit();
-            
-            showNotification('Investment successful!');
-            updateDashboard();
-        } catch (error) {
-            console.error("Investment error:", error);
-            showNotification(`Error: ${error.message}`, true);
-        } finally {
-            button.disabled = false;
-            showLoading(false);
-        }
-    }
-
-    // Attach events after DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-        const buyButtons = document.querySelectorAll('.buy-button');
-        buyButtons.forEach(btn => {
-            btn.addEventListener('click', handleInvestment);
         });
-        
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', () => {
-            clearInterval(sessionCheckInterval);
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
