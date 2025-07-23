@@ -141,6 +141,7 @@
   </div>
 </div>
 
+<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -189,7 +190,6 @@
         const totalWithdrawn = data.totalWithdrawn || 0;
         accountBalance = totalEarnings - totalWithdrawn;
 
-        // Update Firestore with accountBalance
         await updateDoc(userRef, {
           accountBalance
         });
