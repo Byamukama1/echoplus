@@ -913,260 +913,350 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+
 <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
-            authDomain: "echoplus-e9606.firebaseapp.com",
-            projectId: "echoplus-e9606",
-            storageBucket: "echoplus-e9606.appspot.com",
-            messagingSenderId: "674979906304",
-            appId: "1:674979906304:web:7864593a26f571a268a9e5",
-            measurementId: "G-TYC9PSQFR2"
-        };
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+        authDomain: "echoplus-e9606.firebaseapp.com",
+        projectId: "echoplus-e9606",
+        storageBucket: "echoplus-e9606.appspot.com",
+        messagingSenderId: "674979906304",
+        appId: "1:674979906304:web:7864593a26f571a268a9e5",
+        measurementId: "G-TYC9PSQFR2"
+    };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // UI Elements
+    const firebaseStatus = document.createElement('div');
+    firebaseStatus.className = 'firebase-status';
+    firebaseStatus.innerHTML = '<i class="fas fa-sync-alt"></i> <span>Connecting...</span>';
+    document.body.appendChild(firebaseStatus);
+
+    // Session timeout variables
+    const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+    let sessionCheckInterval;
+    
+    // Enhanced notification function with product view suggestion
+    function showNotification(message, isError = false, isInvestmentSuccess = false) {
+        // Remove any existing notification
+        const existingNotif = document.querySelector('.notification');
+        if (existingNotif) existingNotif.remove();
         
-        // UI Elements
-        const firebaseStatus = document.createElement('div');
-        firebaseStatus.className = 'firebase-status';
-        firebaseStatus.innerHTML = '<i class="fas fa-sync-alt"></i> <span>Connecting...</span>';
-        document.body.appendChild(firebaseStatus);
-
-
-     // Session timeout variables
-        const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
-        let sessionCheckInterval;
+        const notification = document.createElement('div');
+        notification.className = 'notification';
         
-        // Show notification function
-        function showNotification(message, isError = false) {
-            // Remove any existing notification
-            const existingNotif = document.querySelector('.notification');
-            if (existingNotif) existingNotif.remove();
-            
-            const notification = document.createElement('div');
-            notification.className = 'notification';
+        if (isInvestmentSuccess) {
+            // Special styling for investment success notification
+            notification.innerHTML = `
+                <div class="investment-success">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>${message}</strong>
+                        <p>Click the <i class="fas fa-chart-pie"></i> Products button to see your investments</p>
+                    </div>
+                </div>
+            `;
+            notification.style.backgroundColor = '#4caf50';
+        } else if (isError) {
             notification.textContent = message;
-            
-            if (isError) {
-                notification.style.backgroundColor = '#ff6b6b';
-            } else {
-                notification.style.backgroundColor = '#4caf50';
-            }
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 10);
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 3000);
+            notification.style.backgroundColor = '#ff6b6b';
+        } else {
+            notification.textContent = message;
+            notification.style.backgroundColor = '#4caf50';
         }
         
-        // Update Firebase status
-        function updateFirebaseStatus(connected) {
-            if (connected) {
-                firebaseStatus.innerHTML = '<i class="fas fa-check-circle"></i> <span>Connected</span>';
-                firebaseStatus.classList.add('connected');
-            } else {
-                firebaseStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> <span>Disconnected</span>';
-                firebaseStatus.classList.remove('connected');
-            }
-        }
+        document.body.appendChild(notification);
         
-        // Monitor connection status
-        db.enableNetwork()
-            .then(() => {
-                updateFirebaseStatus(true);
-            })
-            .catch((error) => {
-                updateFirebaseStatus(false);
-                console.error("Firebase connection error:", error);
-            });
-
-        // Set auth persistence to SESSION and initialize session timeout
-        auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
-            .then(() => {
-                auth.onAuthStateChanged(user => {
-                    if (!user) {
-                        window.location.href = 'login.html';
-                    } else {
-                        // Set login time if not already set
-                        if (!localStorage.getItem('loginTime')) {
-                            localStorage.setItem('loginTime', Date.now());
-                        }
-                        
-                        // Start session timeout checks
-                        clearInterval(sessionCheckInterval);
-                        sessionCheckInterval = setInterval(checkSessionTimeout, 60000); // Check every minute
-                        
-                        updateDashboard();
-                    }
-                });
-            })
-            .catch((error) => {
-                console.error("Persistence error:", error);
-                window.location.href = 'login.html';
-            });
-
-        // Update dashboard with user data
-        async function updateDashboard() {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            try {
-                // 1. Get user document
-                const userRef = db.collection('users').doc(user.uid);
-                const userDoc = await userRef.get();
-                
-                if (!userDoc.exists) {
-                    // Create user document if it doesn't exist
-                    await userRef.set({
-                        email: user.email || '',
-                        phone: '',
-                        totalDeposit: 0,
-                        totalEarnings: 0,
-                        totalWithdrawn: 0,
-                        activeInvestments: 0,
-                        uninvestedDeposit: 0,
-                        todaysEarnings: 0,
-                        accountBalance: 0
-                    });
-                    showNotification("User account created successfully!");
-                }
-                
-                const userData = userDoc.data();
-                
-                // Update UI with the latest data
-                document.getElementById('account-balance').textContent = 
-                    `UGX ${(userData.accountBalance || 0).toLocaleString()}`;
-                
-                document.getElementById('uninvested-deposit').textContent = 
-                    `UGX ${(userData.uninvestedDeposit || 0).toLocaleString()}`;
-                
-                document.getElementById('total-earnings').textContent = 
-                    `UGX ${(userData.totalEarnings || 0).toLocaleString()}`;
-                
-                document.getElementById('total-withdrawn').textContent = 
-                    `UGX ${(userData.totalWithdrawn || 0).toLocaleString()}`;
-                
-                document.getElementById('todays-earnings').textContent = 
-                    `UGX ${(userData.todaysEarnings || 0).toLocaleString()}`;
-                
-                document.getElementById('active-investments').textContent = 
-                    userData.activeInvestments || 0;
-                
-                showNotification("Dashboard updated successfully!");
-            } catch (error) {
-                console.error("Dashboard update error:", error);
-                showNotification(`Error: ${error.message}`, true);
-            }
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 5000); // Show for 5 seconds for investment success
+    }
+    
+    // Update Firebase status
+    function updateFirebaseStatus(connected) {
+        if (connected) {
+            firebaseStatus.innerHTML = '<i class="fas fa-check-circle"></i> <span>Connected</span>';
+            firebaseStatus.classList.add('connected');
+        } else {
+            firebaseStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> <span>Disconnected</span>';
+            firebaseStatus.classList.remove('connected');
         }
-
-        // Handle investment purchases
-        async function handleInvestment(event) {
-            const button = event.currentTarget;
-            button.disabled = true;
-            
-            try {
-                const productId = button.dataset.id;
-                const price = parseInt(button.dataset.price);
-                const title = button.dataset.title;
-                const dailyIncome = parseInt(button.dataset.daily);
-                const cycle = parseInt(button.dataset.cycle);
-                const totalRevenue = dailyIncome * cycle;
-
-                const user = auth.currentUser;
-                if (!user) {
-                    showNotification('Please login first', true);
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                // Get user data
-                const userRef = db.collection('users').doc(user.uid);
-                const userDoc = await userRef.get();
-                
-                if (!userDoc.exists) {
-                    throw new Error('User account not found');
-                }
-
-                const userData = userDoc.data();
-                const uninvested = userData.uninvestedDeposit || 0;
-
-                if (uninvested < price) {
-                    showNotification('Insufficient funds. Please deposit more money.', true);
-                    return;
-                }
-
-                // Create investment document in products collection
-                await db.collection('products').add({
-                    userId: user.uid,
-                    productType: title,
-                    productPrice: price,
-                    dailyIncome: dailyIncome,
-                    totalCycle: cycle,
-                    remainingDays: cycle,
-                    amountEarnedSoFar: 0,
-                    totalRevenue: totalRevenue,
-                    status: 'active',
-                    startDate: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                             
-                // Update user document - only subtract from uninvested deposit
-                await userRef.update({
-                    uninvestedDeposit: firebase.firestore.FieldValue.increment(-price),
-                    activeInvestments: firebase.firestore.FieldValue.increment(1)
-                });
-                
-                showNotification('Investment successful!');
-                updateDashboard();
-            } catch (error) {
-                console.error("Investment error:", error);
-                showNotification(`Error: ${error.message}`, true);
-            } finally {
-                button.disabled = false;
-            }
-        }
-
-        // Check and handle session timeout
-        function checkSessionTimeout() {
-            const loginTime = localStorage.getItem('loginTime');
-            if (!loginTime) return;
-            
-            const now = Date.now();
-            if (now - parseInt(loginTime) > SESSION_DURATION) {
-                // Session expired
-                auth.signOut().then(() => {
-                    localStorage.removeItem('loginTime');
-                    showNotification("Session expired. Please log in again.", true);
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-                });
-            }
-        }
-
-        // Attach events after DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const buyButtons = document.querySelectorAll('.buy-button');
-            buyButtons.forEach(btn => {
-                btn.addEventListener('click', handleInvestment);
-            });
-            
-            // Cleanup on page unload
-            window.addEventListener('beforeunload', () => {
-                clearInterval(sessionCheckInterval);
-            });
+    }
+    
+    // Monitor connection status
+    db.enableNetwork()
+        .then(() => {
+            updateFirebaseStatus(true);
+        })
+        .catch((error) => {
+            updateFirebaseStatus(false);
+            console.error("Firebase connection error:", error);
         });
-    </script>
+
+    // Set auth persistence to SESSION and initialize session timeout
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        .then(() => {
+            auth.onAuthStateChanged(user => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                } else {
+                    // Set login time if not already set
+                    if (!localStorage.getItem('loginTime')) {
+                        localStorage.setItem('loginTime', Date.now());
+                    }
+                    
+                    // Start session timeout checks
+                    clearInterval(sessionCheckInterval);
+                    sessionCheckInterval = setInterval(checkSessionTimeout, 60000); // Check every minute
+                    
+                    updateDashboard();
+                }
+            });
+        })
+        .catch((error) => {
+            console.error("Persistence error:", error);
+            window.location.href = 'login.html';
+        });
+
+    // Update dashboard with user data
+    async function updateDashboard() {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            // 1. Get user document
+            const userRef = db.collection('users').doc(user.uid);
+            const userDoc = await userRef.get();
+            
+            if (!userDoc.exists) {
+                // Create user document if it doesn't exist
+                await userRef.set({
+                    email: user.email || '',
+                    phone: '',
+                    totalDeposit: 0,
+                    totalEarnings: 0,
+                    totalWithdrawn: 0,
+                    activeInvestments: 0,
+                    uninvestedDeposit: 0,
+                    todaysEarnings: 0,
+                    accountBalance: 0
+                });
+                showNotification("User account created successfully!");
+            }
+            
+            const userData = userDoc.data();
+            
+            // Update UI with the latest data
+            document.getElementById('account-balance').textContent = 
+                `UGX ${(userData.accountBalance || 0).toLocaleString()}`;
+            
+            document.getElementById('uninvested-deposit').textContent = 
+                `UGX ${(userData.uninvestedDeposit || 0).toLocaleString()}`;
+            
+            document.getElementById('total-earnings').textContent = 
+                `UGX ${(userData.totalEarnings || 0).toLocaleString()}`;
+            
+            document.getElementById('total-withdrawn').textContent = 
+                `UGX ${(userData.totalWithdrawn || 0).toLocaleString()}`;
+            
+            document.getElementById('todays-earnings').textContent = 
+                `UGX ${(userData.todaysEarnings || 0).toLocaleString()}`;
+            
+            document.getElementById('active-investments').textContent = 
+                userData.activeInvestments || 0;
+            
+            
+        } catch (error) {
+            console.error("Dashboard update error:", error);
+            showNotification(`Error: ${error.message}`, true);
+        }
+    }
+
+    // Handle investment purchases
+    async function handleInvestment(event) {
+        const button = event.currentTarget;
+        button.disabled = true;
+        
+        try {
+            const productId = button.dataset.id;
+            const price = parseInt(button.dataset.price);
+            const title = button.dataset.title;
+            const dailyIncome = parseInt(button.dataset.daily);
+            const cycle = parseInt(button.dataset.cycle);
+            const totalRevenue = dailyIncome * cycle;
+
+            const user = auth.currentUser;
+            if (!user) {
+                showNotification('Please login first', true);
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get user data
+            const userRef = db.collection('users').doc(user.uid);
+            const userDoc = await userRef.get();
+            
+            if (!userDoc.exists) {
+                throw new Error('User account not found');
+            }
+
+            const userData = userDoc.data();
+            const uninvested = userData.uninvestedDeposit || 0;
+
+            if (uninvested < price) {
+                showNotification('Insufficient funds. Please deposit more money.', true);
+                return;
+            }
+
+            // Create investment document in products collection
+            await db.collection('products').add({
+                userId: user.uid,
+                productType: title,
+                productPrice: price,
+                dailyIncome: dailyIncome,
+                totalCycle: cycle,
+                remainingDays: cycle,
+                amountEarnedSoFar: 0,
+                totalRevenue: totalRevenue,
+                status: 'active',
+                startDate: firebase.firestore.FieldValue.serverTimestamp()
+            });
+                         
+            // Update user document - only subtract from uninvested deposit
+            await userRef.update({
+                uninvestedDeposit: firebase.firestore.FieldValue.increment(-price),
+                activeInvestments: firebase.firestore.FieldValue.increment(1)
+            });
+            
+            // Show enhanced success notification with product view suggestion
+            showNotification('Investment successful!', false, true);
+            
+            updateDashboard();
+        } catch (error) {
+            console.error("Investment error:", error);
+            showNotification(`Error: ${error.message}`, true);
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    // Check and handle session timeout
+    function checkSessionTimeout() {
+        const loginTime = localStorage.getItem('loginTime');
+        if (!loginTime) return;
+        
+        const now = Date.now();
+        if (now - parseInt(loginTime) > SESSION_DURATION) {
+            // Session expired
+            auth.signOut().then(() => {
+                localStorage.removeItem('loginTime');
+                showNotification("Session expired. Please log in again.", true);
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            });
+        }
+    }
+
+    // Attach events after DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        const buyButtons = document.querySelectorAll('.buy-button');
+        buyButtons.forEach(btn => {
+            btn.addEventListener('click', handleInvestment);
+        });
+        
+        // Highlight products button in nav
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage === 'products.html') {
+            const productsNav = document.querySelector('.nav-item[href="products.html"]');
+            if (productsNav) {
+                productsNav.classList.add('active');
+                productsNav.querySelector('i').style.color = '#4361ee';
+            }
+        }
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            clearInterval(sessionCheckInterval);
+        });
+    });
+</script>
+
+<style>
+    /* Enhanced notification styles */
+    .notification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 25px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.3s, top 0.3s;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 90%;
+        width: auto;
+        white-space: normal;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    
+    .notification.show {
+        top: 30px;
+        opacity: 1;
+    }
+    
+    .investment-success {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .investment-success i.fa-check-circle {
+        font-size: 24px;
+    }
+    
+    .investment-success strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    .investment-success p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.9;
+    }
+    
+    .investment-success .fa-chart-pie {
+        color: #ffcc00;
+        margin: 0 5px;
+    }
+    
+    /* Active nav item */
+    .nav-item.active {
+        color: var(--primary);
+    }
+    
+    .nav-item.active i {
+        color: var(--primary);
+    }
+</style>
 </body>
 </html>
