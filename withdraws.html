@@ -129,7 +129,7 @@
     <table>
       <thead>
         <tr>
-          <th>Date</th>
+          <th>Phone</th>
           <th>Amount</th>
           <th>Status</th>
         </tr>
@@ -233,13 +233,11 @@
         const newWithdrawn = prevWithdrawn + amount;
         const newBalance = totalEarnings - newWithdrawn;
 
-        // Update user's withdraw + balance
         await updateDoc(userRef, {
           totalWithdrawn: newWithdrawn,
           accountBalance: newBalance
         });
 
-        // Add withdrawal request
         await addDoc(collection(db, "withdraws"), {
           userId: currentUser.uid,
           phone,
@@ -251,8 +249,8 @@
 
         alert("Withdrawal request submitted.");
         form.reset();
-        loadWithdrawals(currentUser.uid);
         await fetchUserData(currentUser.uid);
+        loadWithdrawals(currentUser.uid);
       }
     } catch (err) {
       console.error(err);
@@ -277,14 +275,16 @@
 
     snapshot.forEach(doc => {
       const data = doc.data();
-      const date = data.createdAt?.toDate().toLocaleString() || "Pending";
-      const statusClass = data.status.toLowerCase();
+      const phone = data.phone || "N/A";
+      const amount = data.amount || 0;
+      const status = data.status || "pending";
+      const statusClass = status.toLowerCase();
 
       const row = `
         <tr>
-          <td>${date}</td>
-          <td>UGX ${data.amount.toLocaleString()}</td>
-          <td class="status ${statusClass}">${data.status}</td>
+          <td>${phone}</td>
+          <td>UGX ${amount.toLocaleString()}</td>
+          <td class="status ${statusClass}">${status}</td>
         </tr>
       `;
       withdrawBody.innerHTML += row;
