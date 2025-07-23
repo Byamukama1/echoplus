@@ -439,8 +439,9 @@
 
     <!-- Firebase SDK -->
   
+<!-- Firebase Signup Script -->
 <script type="module">
-  // Firebase config
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
     authDomain: "echoplus-e9606.firebaseapp.com",
@@ -451,17 +452,16 @@
     measurementId: "G-TYC9PSQFR2"
   };
 
-  // Firebase imports
+  // Firebase Imports
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
   import { getFirestore, doc, setDoc, serverTimestamp, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
   import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  // Form Elements
+  // DOM Elements
   const signupForm = document.getElementById('signup-form');
   const usernameInput = document.getElementById('username');
   const emailInput = document.getElementById('email');
@@ -472,16 +472,14 @@
   const referralDisplay = document.getElementById('referral-display');
   const successMessage = document.getElementById('success-message');
 
-  // Get referral from URL
+  // Referral from URL
   const urlParams = new URLSearchParams(window.location.search);
   const referrerPhone = urlParams.get('ref') || null;
-
   if (referrerPhone) {
     referralDisplay.style.display = 'flex';
     referralPhoneSpan.textContent = referrerPhone;
   }
 
-  // Handle signup
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -503,20 +501,18 @@
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      const userData = {
+      // Save user data to Firestore
+      await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
-        name,
-        email,
-        phone,
+        name: name,
+        email: email,
+        phone: phone,
         referrerPhone: referrerPhone || null,
         totalEarnings: welcomeBonus,
         timestamp: serverTimestamp()
-      };
+      });
 
-      // Save user profile
-      await setDoc(doc(db, "users", user.uid), userData);
-
-      // Add earnings record
+      // Add referral earnings entry
       await addDoc(collection(db, "earnings"), {
         userId: user.uid,
         amount: welcomeBonus,
@@ -525,15 +521,15 @@
         timestamp: serverTimestamp()
       });
 
+      // Success display
       successMessage.style.display = 'block';
       signupForm.style.opacity = '0.6';
-
       setTimeout(() => {
         window.location.href = "index.html";
       }, 2000);
     } catch (error) {
       console.error("Signup error:", error);
-      alert("Error: " + (error.message || "Signup failed"));
+      alert("Error: " + error.message);
       signupBtn.disabled = false;
       signupBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
     }
