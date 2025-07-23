@@ -438,7 +438,9 @@
     </div>
 
     <!-- Firebase SDK -->
-  <script type="module">
+  
+
+<script type="module">
   // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
@@ -452,7 +454,7 @@
 
   // Firebase imports
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, serverTimestamp, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
   import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
 
   const app = initializeApp(firebaseConfig);
@@ -498,17 +500,28 @@
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      const welcomeBonus = 2000;
+
       const userData = {
         name,
         email,
         phone,
-        referrerPhone, // will be null if not provided
+        referrerPhone, // null if not provided
         timestamp: serverTimestamp(),
-        uid: user.uid
+        uid: user.uid,
+        totalEarnings: welcomeBonus // set welcome bonus
       };
 
-      // Save using UID as document ID
+      // Save user
       await setDoc(doc(db, "users", user.uid), userData);
+
+      // Record welcome bonus in earnings collection
+      await addDoc(collection(db, "earnings"), {
+        userId: user.uid,
+        amount: welcomeBonus,
+        type: "welcome",
+        date: serverTimestamp()
+      });
 
       document.getElementById('success-message').style.display = 'block';
       signupForm.style.opacity = '0.6';
