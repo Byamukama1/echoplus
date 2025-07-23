@@ -58,32 +58,16 @@
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     button:hover {
       background-color: #0022aa;
     }
 
-    button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
-
     .info-box {
-      margin: 15px 0;
-      padding: 12px;
-      background-color: #f8f9ff;
-      border-radius: 8px;
+      margin: 10px 0;
       font-weight: 600;
       color: #333;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .info-box span {
-      font-weight: normal;
-      color: #555;
     }
 
     .table-container {
@@ -104,92 +88,54 @@
 
     table th {
       background-color: #f1f1f1;
-      font-weight: 600;
     }
 
     .status {
       font-weight: bold;
       text-transform: capitalize;
-      padding: 4px 8px;
-      border-radius: 4px;
-      display: inline-block;
     }
 
-    .pending { 
-      color: #ff8800;
-      background-color: #fff5e6; 
-    }
-    .approved { 
-      color: #28a745;
-      background-color: #e6ffed; 
-    }
-    .rejected { 
-      color: #dc3545;
-      background-color: #ffe6e6; 
-    }
-    
-    .loading {
-      text-align: center;
-      padding: 20px;
-      color: #666;
-    }
-    
-    .error {
-      color: #dc3545;
-      background-color: #ffe6e6;
-      padding: 10px;
-      border-radius: 6px;
-      margin: 10px 0;
-      display: none;
-    }
+    .pending { color: #ff8800; }
+    .paid { color: #28a745; }
+    .rejected { color: #dc3545; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h2><i class="fas fa-money-bill-wave"></i> Withdraw Funds</h2>
+  <h2>Withdraw Funds</h2>
   <p class="summary">
     Minimum withdrawal is <strong>UGX 10,000</strong>. You can only withdraw from your account balance.
   </p>
 
-  <div class="info-box">
-    <div>Total Earnings:</div>
-    <div><span id="totalEarnings">UGX 0</span></div>
-  </div>
-  <div class="info-box">
-    <div>Account Balance:</div>
-    <div><span id="accountBalance">UGX 0</span></div>
-  </div>
+  <div class="info-box">Total Earnings: <span id="totalEarnings">UGX 0</span></div>
+  <div class="info-box">Account Balance: <span id="accountBalance">UGX 0</span></div>
 
-  <div id="errorMessage" class="error"></div>
-  
   <form id="withdrawForm">
     <label for="phone">Phone Number to Receive Funds</label>
-    <input type="tel" id="phone" required placeholder="e.g. 2567XXXXXXX" pattern="256\d{9}" 
-           title="Enter valid Ugandan number starting with 256 (e.g. 256712345678)">
+    <input type="tel" id="phone" required placeholder="e.g. 077XXXXXXX">
 
     <label for="holder">Account Holder Name</label>
     <input type="text" id="holder" required placeholder="Full Name">
 
     <label for="amount">Amount (UGX)</label>
-    <input type="number" id="amount" required placeholder="Minimum 10000" min="10000" step="1000">
+    <input type="number" id="amount" required placeholder="Minimum 10000">
 
-    <button type="submit" id="submitBtn">Submit Withdrawal</button>
+    <button type="submit">Submit Withdrawal</button>
   </form>
 
   <div class="table-container">
-    <h3><i class="fas fa-history"></i> My Withdrawal History</h3>
+    <h3>My Withdrawal History</h3>
     <table>
       <thead>
         <tr>
           <th>Phone</th>
           <th>Amount</th>
-          <th>Date</th>
           <th>Status</th>
         </tr>
       </thead>
       <tbody id="withdrawBody">
-        <tr><td colspan="4" class="loading">Loading withdrawal history...</td></tr>
+        <tr><td colspan="3">Loading...</td></tr>
       </tbody>
     </table>
   </div>
@@ -197,10 +143,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { 
-    getFirestore, collection, addDoc, serverTimestamp, 
-    query, where, getDocs, orderBy, doc, getDoc, updateDoc 
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, Timestamp, query, where, getDocs, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
@@ -220,8 +163,6 @@
   const withdrawBody = document.getElementById('withdrawBody');
   const earningsDisplay = document.getElementById('totalEarnings');
   const balanceDisplay = document.getElementById('accountBalance');
-  const submitBtn = document.getElementById('submitBtn');
-  const errorMessage = document.getElementById('errorMessage');
 
   let currentUser;
   let totalEarnings = 0;
@@ -233,77 +174,49 @@
       await fetchUserData(user.uid);
       loadWithdrawals(user.uid);
     } else {
-      showError("You must log in to access this page.");
-      setTimeout(() => window.location.href = "login.html", 3000);
+      alert("You must log in to access this page.");
+      window.location.href = "login.html";
     }
   });
-
-  function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.style.display = 'block';
-    setTimeout(() => errorMessage.style.display = 'none', 5000);
-  }
 
   async function fetchUserData(uid) {
     try {
       const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
-      
       if (userSnap.exists()) {
         const data = userSnap.data();
         totalEarnings = data.totalEarnings || 0;
         const totalWithdrawn = data.totalWithdrawn || 0;
         accountBalance = totalEarnings - totalWithdrawn;
 
-        // Update Firestore with accountBalance if missing
-        if (typeof data.accountBalance === 'undefined') {
-          await updateDoc(userRef, { accountBalance });
-        }
+        await updateDoc(userRef, { accountBalance });
 
         earningsDisplay.textContent = `UGX ${totalEarnings.toLocaleString()}`;
         balanceDisplay.textContent = `UGX ${accountBalance.toLocaleString()}`;
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      showError("Failed to load account data. Please try again.");
     }
   }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Processing...";
-    
     const phone = document.getElementById('phone').value.trim();
     const holder = document.getElementById('holder').value.trim();
     const amount = parseInt(document.getElementById('amount').value.trim());
-    
-    // Validate phone number format (Ugandan format)
-    if (!/^256\d{9}$/.test(phone)) {
-      showError("Please enter a valid Ugandan phone number starting with 256 (e.g. 256712345678)");
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Withdrawal";
-      return;
-    }
 
-    if (!holder || holder.length < 3) {
-      showError("Please enter a valid account holder name");
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Withdrawal";
+    if (!phone || !holder || !amount) {
+      alert("Please fill in all fields.");
       return;
     }
 
     if (amount < 10000) {
-      showError("Minimum withdrawal amount is UGX 10,000");
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Withdrawal";
+      alert("Minimum withdrawal amount is UGX 10,000.");
       return;
     }
 
     if (amount > accountBalance) {
-      showError("You cannot withdraw more than your current account balance");
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Withdrawal";
+      alert("You cannot withdraw more than your current account balance.");
       return;
     }
 
@@ -328,79 +241,51 @@
           holder,
           amount,
           status: "pending",
-          createdAt: serverTimestamp()
+          timestamp: Timestamp.now()
         });
 
-        // Update local balance immediately
-        accountBalance = newBalance;
-        balanceDisplay.textContent = `UGX ${accountBalance.toLocaleString()}`;
-        
-        showError("Withdrawal request submitted successfully!", true);
+        alert("Withdrawal request submitted.");
         form.reset();
         await fetchUserData(currentUser.uid);
         loadWithdrawals(currentUser.uid);
       }
     } catch (err) {
-      console.error("Withdrawal error:", err);
-      showError("Failed to submit withdrawal. Please try again.");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Withdrawal";
+      console.error(err);
+      alert("Failed to submit withdrawal.");
     }
   });
 
   async function loadWithdrawals(uid) {
-    try {
-      withdrawBody.innerHTML = '<tr><td colspan="4" class="loading">Loading withdrawal history...</td></tr>';
-      
-      const q = query(
-        collection(db, "withdraws"),
-        where("userId", "==", uid),
-        orderBy("createdAt", "desc")
-      );
+    const q = query(
+      collection(db, "withdraws"),
+      where("userId", "==", uid),
+      orderBy("timestamp", "desc")
+    );
 
-      const snapshot = await getDocs(q);
-      withdrawBody.innerHTML = "";
+    const snapshot = await getDocs(q);
+    withdrawBody.innerHTML = "";
 
-      if (snapshot.empty) {
-        withdrawBody.innerHTML = '<tr><td colspan="4">No withdrawal history found</td></tr>';
-        return;
-      }
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const phone = data.phone || "N/A";
-        const amount = data.amount || 0;
-        const status = data.status || "pending";
-        const statusClass = status.toLowerCase();
-        
-        // Format Firestore timestamp
-        let dateStr = "N/A";
-        if (data.createdAt) {
-          const date = data.createdAt.toDate();
-          dateStr = date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
-        }
-
-        const row = `
-          <tr>
-            <td>${phone}</td>
-            <td>UGX ${amount.toLocaleString()}</td>
-            <td>${dateStr}</td>
-            <td><span class="status ${statusClass}">${status}</span></td>
-          </tr>
-        `;
-        withdrawBody.innerHTML += row;
-      });
-    } catch (error) {
-      console.error("Error loading withdrawals:", error);
-      withdrawBody.innerHTML = '<tr><td colspan="4">Failed to load withdrawal history</td></tr>';
+    if (snapshot.empty) {
+      withdrawBody.innerHTML = "<tr><td colspan='3'>No withdrawal history found.</td></tr>";
+      return;
     }
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const phone = data.phone || "N/A";
+      const amount = data.amount || 0;
+      const status = data.status || "pending";
+      const statusClass = status.toLowerCase();
+
+      const row = `
+        <tr>
+          <td>${phone}</td>
+          <td>UGX ${amount.toLocaleString()}</td>
+          <td class="status ${statusClass}">${status}</td>
+        </tr>
+      `;
+      withdrawBody.innerHTML += row;
+    });
   }
 </script>
 
