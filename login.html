@@ -291,13 +291,13 @@
             <i class="fas fa-chart-line"></i>
             <span>Echoplus</span>
         </div>
-        <p class="tagline">Secure access to your investment portfolio</p>
+        
 
         <h2 class="form-title">Sign In</h2>
         
         <div class="session-info">
             <i class="fas fa-clock"></i>
-            <span>Your session will expire after 1 hour of inactivity</span>
+            <span>Your login will expire after 1 hour of inactivity</span>
         </div>
 
         <form id="login-form">
@@ -322,10 +322,7 @@
                 <div class="error-message" id="password-error">Password must be at least 6 characters</div>
             </div>
 
-            <div class="login-links">
-                <a href="#" id="forgot-password">Forgot password?</a>
-                <a href="#" id="resend-verification">Resend verification</a>
-            </div>
+            
 
             <button type="submit" class="btn" id="login-btn">
                 <i class="fas fa-sign-in-alt"></i> Sign In
@@ -337,7 +334,7 @@
         </form>
 
         <div class="signup-link">
-            Don't have an account? <a href="signup.html">Create one</a>
+            Don't have an account? <a href="signup.html">Create account</a>
         </div>
 
         <div class="footer">
@@ -458,7 +455,7 @@
                         errorMessage = 'Too many login attempts. Please try again later.';
                         break;
                     default:
-                        errorMessage = 'An error occurred. Please try again.';
+                        errorMessage = 'An error occurred. check your email, password and network.';
                 }
 
                 // Show specific error message
