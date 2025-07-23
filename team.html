@@ -123,6 +123,16 @@
     .copy-btn:hover {
       opacity: 0.9;
     }
+
+    .table-header {
+      font-weight: bold;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -142,8 +152,15 @@
     </div>
   </div>
 
-  <div class="referral-list" id="referralList">
-    <p>Loading referred users...</p>
+  <div class="referral-list">
+    <div class="table-header">
+      <span>Phone</span>
+      <span>Deposit</span>
+      <span>My Commission</span>
+    </div>
+    <div id="referralList">
+      <p>Loading referred users...</p>
+    </div>
   </div>
 </div>
 
