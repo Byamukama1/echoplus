@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account - EchoPlus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
+      color: #333;
+      min-height: 100vh;
+      padding-bottom: 80px; /* space for bottom nav */
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 86, 204, 0.15);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(120deg, #0056cc, #0088ff);
+      color: white;
+      padding: 30px 25px 50px;
+      text-align: center;
+      position: relative;
+    }
+
+    .header h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      letter-spacing: 0.5px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 16px;
+    }
+
+    .user-avatar {
+      width: 100px;
+      height: 100px;
+      background: white;
+      border-radius: 50%;
+      border: 5px solid white;
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-avatar i {
+      font-size: 45px;
+      color: #0056cc;
+    }
+
+    .content {
+      padding: 70px 25px 30px;
+    }
+
+    .user-info {
+      background: #f9fbfe;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border: 1px solid #e6f0ff;
+      box-shadow: 0 4px 10px rgba(0, 86, 204, 0.05);
+    }
+
+    .info-item {
+      display: flex;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf4ff;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      flex: 0 0 100px;
+      font-weight: 600;
+      color: #0056cc;
+      display: flex;
+      align-items: center;
+    }
+
+    .label i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    .value {
+      flex: 1;
+      color: #555;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn-link {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(to right, #0056cc, #0088ff);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 86, 204, 0.2);
+    }
+
+    .btn-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 86, 204, 0.3);
+    }
+
+    .btn-link i {
+      margin-right: 12px;
+      font-size: 20px;
+    }
+
+    .btn-link.logout {
+      background: white;
+      color: #ff4d4f;
+      border: 1px solid #ffe6e6;
+    }
+
+    .btn-link.logout:hover {
+      background: #fff5f5;
+      box-shadow: 0 4px 10px rgba(255, 77, 79, 0.1);
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 25px;
+      font-weight: 700;
+      font-size: 20px;
+      color: white;
+      letter-spacing: 0.5px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .bottom-nav a {
+      text-align: center;
+      color: #555;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .bottom-nav a.active {
+      color: #0056cc;
+    }
+
+    .bottom-nav i {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 25px 20px 45px;
+      }
+      .user-avatar {
+        width: 90px;
+        height: 90px;
+        bottom: -45px;
+      }
+      .content {
+        padding: 60px 20px 25px;
+      }
+      .btn-link {
+        padding: 14px 18px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo">EchoPlus</div>
+
+  <div class="header">
+    <h2>My Account</h2>
+  </div>
+
+  <div class="user-avatar">
+    <i class="fas fa-user-circle"></i>
+  </div>
+
+  <div class="content">
+    <div class="user-info">
+      <div class="info-item">
+        <div class="label"><i class="fas fa-envelope"></i> Email:</div>
+        <div class="value" id="email">Loading...</div>
+      </div>
+      <div class="info-item">
+        <div class="label"><i class="fas fa-user"></i> Name:</div>
+        <div class="value" id="name">Loading...</div>
+      </div>
+      <div class="info-item">
+        <div class="label"><i class="fas fa-phone"></i> Phone:</div>
+        <div class="value" id="phone">Loading...</div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <a href="products.html" class="btn-link"><i class="fas fa-box"></i> My Products</a>
+      <a href="team.html" class="btn-link"><i class="fas fa-users"></i> My Team</a>
+      <a href="https://wa.me/256700000000" class="btn-link" target="_blank"><i class="fab fa-whatsapp"></i> Customer Care</a>
+      <a href="#" class="btn-link logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="products.html"><i class="fas fa-chart-pie"></i><span>Products</span></a>
+  <a href="team.html"><i class="fas fa-gift"></i><span>Team</span></a>
+  <a href="account.html" class="active"><i class="fas fa-user"></i><span>Account</span></a>
+</nav>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
+    authDomain: "echoplus-e9606.firebaseapp.com",
+    projectId: "echoplus-e9606",
+    storageBucket: "echoplus-e9606.appspot.com",
+    messagingSenderId: "674979906304",
+    appId: "1:674979906304:web:7864593a26f571a268a9e5"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    document.getElementById('email').textContent = user.email;
+
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    const userData = userDoc.data();
+    document.getElementById('name').textContent = userData?.name || "Not set";
+    document.getElementById('phone').textContent = userData?.phone || "Not set";
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    auth.signOut().then(() => {
+      window.location.href = 'login.html';
+    }).catch((error) => {
+      console.error("Logout error:", error);
+    });
+  });
+</script>
+
+</body>
+</html>
