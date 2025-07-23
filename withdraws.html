@@ -89,16 +89,14 @@
       text-transform: capitalize;
     }
 
-    .pending {
-      color: #ff8800;
-    }
+    .pending { color: #ff8800; }
+    .approved { color: #28a745; }
+    .rejected { color: #dc3545; }
 
-    .approved {
-      color: #28a745;
-    }
-
-    .rejected {
-      color: #dc3545;
+    .balance-box {
+      margin-top: 10px;
+      font-weight: 600;
+      color: #333;
     }
   </style>
 </head>
@@ -107,8 +105,12 @@
 <div class="container">
   <h2>Withdraw Funds</h2>
   <p class="summary">
-    Minimum withdrawal is <strong>UGX 10,000</strong>. Provide your details below to request a withdrawal.
+    Minimum withdrawal is <strong>UGX 10,000</strong>. You can only withdraw from your available total earnings.
   </p>
+
+  <div class="balance-box">
+    Your Total Earnings: <span id="totalEarnings">UGX 0</span>
+  </div>
 
   <form id="withdrawForm">
     <label for="phone">Phone Number to Receive Funds</label>
@@ -140,10 +142,10 @@
   </div>
 </div>
 
-<!-- Firebase -->
+<!-- Firebase Script -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
@@ -161,18 +163,35 @@
 
   const form = document.getElementById('withdrawForm');
   const withdrawBody = document.getElementById('withdrawBody');
+  const earningsDisplay = document.getElementById('totalEarnings');
 
   let currentUser;
+  let totalEarnings = 0;
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
+      await fetchTotalEarnings(user.uid);
       loadWithdrawals(user.uid);
     } else {
       alert("You must log in to access this page.");
       window.location.href = "login.html";
     }
   });
+
+  async function fetchTotalEarnings(uid) {
+    try {
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        totalEarnings = data.totalEarnings || 0;
+        earningsDisplay.textContent = `UGX ${totalEarnings.toLocaleString()}`;
+      }
+    } catch (error) {
+      console.error("Failed to fetch earnings:", error);
+    }
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -187,6 +206,11 @@
 
     if (amount < 10000) {
       alert("Minimum withdrawal amount is UGX 10,000.");
+      return;
+    }
+
+    if (amount > totalEarnings) {
+      alert("You cannot withdraw more than your total earnings.");
       return;
     }
 
