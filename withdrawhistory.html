@@ -70,7 +70,7 @@
         <th>Phone Number</th>
         <th>Amount</th>
         <th>Status</th>
-        <th>Date</th>
+      
       </tr>
     </thead>
     <tbody id="historyBody">
@@ -81,7 +81,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
@@ -101,34 +101,38 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const q = query(
-        collection(db, "withdraws"),
-        where("userId", "==", user.uid),
-        orderBy("timestamp", "desc")
-      );
-      const snapshot = await getDocs(q);
+      try {
+        const q = query(
+          collection(db, "withdraws"),
+          where("userId", "==", user.uid)
+        );
+        const snapshot = await getDocs(q);
 
-      historyBody.innerHTML = "";
-      if (snapshot.empty) {
-        historyBody.innerHTML = "<tr><td colspan='4'>No withdrawals found.</td></tr>";
+        historyBody.innerHTML = "";
+        if (snapshot.empty) {
+          historyBody.innerHTML = "<tr><td colspan='4'>No withdrawals found.</td></tr>";
+        }
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const phone = data.phone || "-";
+          const amount = data.amount || 0;
+          const status = data.status || "pending";
+          const date = data.timestamp?.toDate().toLocaleString() || "-";
+
+          historyBody.innerHTML += `
+            <tr>
+              <td>${phone}</td>
+              <td>UGX ${amount.toLocaleString()}</td>
+              <td class="status ${status.toLowerCase()}">${status}</td>
+              <td>${date}</td>
+            </tr>
+          `;
+        });
+      } catch (error) {
+        console.error("Error loading withdrawal history:", error);
+        historyBody.innerHTML = "<tr><td colspan='4'>Failed to load data.</td></tr>";
       }
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const phone = data.phone || "-";
-        const amount = data.amount || 0;
-        const status = data.status || "pending";
-        const date = data.timestamp?.toDate().toLocaleString() || "-";
-
-        historyBody.innerHTML += `
-          <tr>
-            <td>${phone}</td>
-            <td>UGX ${amount.toLocaleString()}</td>
-            <td class="status ${status.toLowerCase()}">${status}</td>
-            <td>${date}</td>
-          </tr>
-        `;
-      });
     } else {
       alert("You must be logged in to view withdrawal history.");
       window.location.href = "login.html";
