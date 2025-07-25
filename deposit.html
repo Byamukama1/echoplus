@@ -23,6 +23,7 @@
       padding: 35px;
       width: 95%;
       max-width: 450px;
+      position: relative;
     }
 
     .header {
@@ -124,6 +125,108 @@
     .guidance li {
       margin-bottom: 8px;
     }
+
+    /* New styles for records button */
+    .view-records-btn {
+      background: #6c757d;
+      padding: 8px 12px;
+      width: auto;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .view-records-btn:hover {
+      background: #5a6268;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #0056cc;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #777;
+      width: auto;
+      padding: 0;
+    }
+
+    .close-modal:hover {
+      color: #333;
+    }
+
+    .record-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .record-table th {
+      background-color: #f0f7ff;
+      padding: 10px;
+      text-align: left;
+      border-bottom: 2px solid #0056cc;
+    }
+
+    .record-table td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .record-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .no-records {
+      text-align: center;
+      padding: 20px;
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    .status-pending {
+      color: #ff9800;
+    }
+
+    .status-completed {
+      color: #28a745;
+    }
   </style>
 </head>
 <body>
@@ -162,6 +265,8 @@
     <input type="number" id="amount" required placeholder="e.g. 10000" />
 
     <button type="submit">Submit Deposit</button>
+    <!-- New View Records Button -->
+    <button type="button" class="view-records-btn" id="viewRecordsBtn">View Deposit Records</button>
   </form>
 
   <!-- Recharge Guidelines -->
@@ -180,10 +285,37 @@
 
 </div>
 
+<!-- Deposit Records Modal -->
+<div class="modal" id="depositRecordsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Your Deposit Records</h3>
+      <button class="close-modal" id="closeModal">&times;</button>
+    </div>
+    <div id="recordsContainer">
+      <!-- Records will be displayed here -->
+    </div>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    query, 
+    where, 
+    getDocs,
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signOut 
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyChCWhXOdNDl-8mc367bPmRBnNnVJsQVVU",
@@ -199,6 +331,10 @@
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const depositForm = document.getElementById('depositForm');
+  const viewRecordsBtn = document.getElementById('viewRecordsBtn');
+  const depositRecordsModal = document.getElementById('depositRecordsModal');
+  const closeModal = document.getElementById('closeModal');
+  const recordsContainer = document.getElementById('recordsContainer');
 
   const sessionTimeoutMs = 60 * 60 * 1000;
 
@@ -262,7 +398,81 @@
         alert("Something went wrong. Please try again.");
       }
     });
+
+    // Setup view records button
+    viewRecordsBtn.addEventListener('click', async () => {
+      try {
+        showLoadingRecords();
+        const q = query(collection(db, "deposits"), where("userId", "==", user.uid));
+        const querySnapshot = await getDocs(q);
+        displayRecords(querySnapshot);
+        depositRecordsModal.style.display = "flex";
+      } catch (error) {
+        console.error("Error fetching records:", error);
+        alert("Failed to load deposit records.");
+      }
+    });
   }
+
+  function showLoadingRecords() {
+    recordsContainer.innerHTML = `
+      <div style="text-align: center; padding: 20px;">
+        <p>Loading your deposit records...</p>
+      </div>
+    `;
+  }
+
+  function displayRecords(querySnapshot) {
+    if (querySnapshot.empty) {
+      recordsContainer.innerHTML = `
+        <div class="no-records">
+          <p>No deposit records found</p>
+        </div>
+      `;
+      return;
+    }
+
+    let recordsHTML = `
+      <table class="record-table">
+        <thead>
+          <tr>
+            <th>Phone</th>
+            <th>Amount (UGX)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      recordsHTML += `
+        <tr>
+          <td>${data.phone || 'N/A'}</td>
+          <td>${data.amount ? data.amount.toLocaleString() : '0'}</td>
+          <td class="status-${data.status}">${data.status || 'pending'}</td>
+        </tr>
+      `;
+    });
+
+    recordsHTML += `
+        </tbody>
+      </table>
+    `;
+
+    recordsContainer.innerHTML = recordsHTML;
+  }
+
+  // Modal functionality
+  closeModal.addEventListener('click', () => {
+    depositRecordsModal.style.display = "none";
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === depositRecordsModal) {
+      depositRecordsModal.style.display = "none";
+    }
+  });
 
   onAuthStateChanged(auth, (user) => {
     checkSessionTimeout();
